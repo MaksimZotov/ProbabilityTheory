@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Maksim/CLionProjects/ProbabilityTheory/main.cpp
+ctime
+-
+iostream
+-
+cstdlib
+-
+math.h
+-
+
