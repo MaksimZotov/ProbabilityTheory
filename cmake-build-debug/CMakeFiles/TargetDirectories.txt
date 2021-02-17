@@ -1,3 +1,0 @@
-C:/Users/Maksim/CLionProjects/ProbabilityTheory/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Maksim/CLionProjects/ProbabilityTheory/cmake-build-debug/CMakeFiles/ProbabilityTheory.dir
-C:/Users/Maksim/CLionProjects/ProbabilityTheory/cmake-build-debug/CMakeFiles/edit_cache.dir
