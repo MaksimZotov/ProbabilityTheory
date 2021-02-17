@@ -4,6 +4,6 @@
 void InitArrayWithZeroes(double* array, int n);
 void InitArrayWithZeroes(int* array, int n);
 
-void InitArrayWithRandomNumbers(int* array, int n, int a, int b);
+void InitArrayWithDifferentRandomNumbers(int* array, int n, int a, int b);
 
 #endif

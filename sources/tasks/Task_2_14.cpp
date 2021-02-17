@@ -26,14 +26,17 @@ void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfT
 
     for (int i = 0; i < numberOfIterations; i++)
     {
-        InitArrayWithRandomNumbers(winningTickets, numberOfWinningTickets, 1, numberOfTickets);
-        InitArrayWithRandomNumbers(takenTickets, numberOfTakenTickets, 1, numberOfTickets);
+        InitArrayWithDifferentRandomNumbers(winningTickets, numberOfWinningTickets, 1, numberOfTickets);
+        InitArrayWithDifferentRandomNumbers(takenTickets, numberOfTakenTickets, 1, numberOfTickets);
 
         int countOfTakenWinningTickets = 0;
         for (int j = 0; j < numberOfTakenTickets; j++)
             for (int k = 0; k < numberOfWinningTickets; k++)
                 if (takenTickets[j] == winningTickets[k])
+                {
                     countOfTakenWinningTickets++;
+                    break;
+                }
 
         CountFavorableOutcomes(countOfFavorableOutcomes, countOfTakenWinningTickets);
     }

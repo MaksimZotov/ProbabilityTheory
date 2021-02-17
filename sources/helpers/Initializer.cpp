@@ -13,7 +13,7 @@ void InitArrayWithZeroes(int* array, int n)
         array[i] = 0;
 }
 
-void InitArrayWithRandomNumbers(int* array, int n, int a, int b)
+void InitArrayWithDifferentRandomNumbers(int* array, int n, int a, int b)
 {
     if (b - a + 1 < n)
         throw "b - a + 1 must be less than n";
