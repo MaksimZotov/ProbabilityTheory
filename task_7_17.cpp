@@ -19,9 +19,9 @@ double get_random_number(double a, double b) {
 
 int main() {
     srand(time(NULL));
-    const int number_of_iterations = 100000;
+    const int number_of_iterations = 10000000;
     const int number_of_butches_with_parts = 3;
-    const double percent_of_second_rate_parts = 0.333;
+    const double percent_of_second_rate_parts = 1.0 / 3;
     int count1 = 0;
     int count2 = 0;
     int n = 0;
@@ -35,5 +35,7 @@ int main() {
         }
     }
     cout << (double)count1 / (number_of_iterations - n) << endl;
+
+    // incorrect result: actual ~ 0.187, expected ~ 0.182
     cout << (double)count2 / (number_of_iterations - n) << endl;
 }
