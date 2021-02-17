@@ -5,28 +5,27 @@
 
 using namespace std;
 
-// Генерирует случайное действительное число в диапазоне [a; b]
-double get_random_number(double a, double b) {
-    if (a > b) throw invalid_argument("a must be less than b or equal to b");
-    return (a == b) ? 0 : ((b - a) * ((double)rand() / RAND_MAX)) + a;
+// Генерирует случайное целое число в диапазоне [a; b]
+int get_random_number(int a, int b) {
+    if (a >= b) throw invalid_argument("a must be less than b");
+    return rand() % (b - a + 1) + a;
 }
 
 int main() {
     srand(time(NULL));
-    const int number_of_iterations = 1000000;
-    const double p1 = 0.2;
-    const double p2 = 0.3;
+    const int number_of_iterations = 100000;
+    const int a = 100;
+    const int b = 1000;
+    int count_uneven = 0;
     int count = 0;
     for (int i = 0; i < number_of_iterations; i++) {
-        while (true) {
-            if (get_random_number(0, 1) <= p1) {
-                count++;
-                break;
-            }
-            if (get_random_number(0, 1) <= p2) {
-                break;
-            }
+        int n = get_random_number(a, b);
+        for (int j = 0; j < n; j++) {
+            count_uneven += get_random_number(0, 1) == 1 ? 1 : 0;
+        }
+        if (count_uneven % 2 == 1) {
+            count++;
         }
     }
-    cout << "\nResult: " << (double)count / number_of_iterations << endl;
+    cout << (double)count / number_of_iterations << endl;
 }
