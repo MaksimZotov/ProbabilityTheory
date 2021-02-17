@@ -18,8 +18,8 @@ void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfT
     if (numberOfTickets < numberOfWinningTickets) throw "number of tickets must not be less than number of winning tickets";
     if (numberOfTickets < numberOfTakenTickets) throw "number of tickets must not be less than number of taken tickets";
 
-    int *numberOfFavorableOutcomes = new int[numberOfResults];
-    InitArrayWithZeroes(numberOfFavorableOutcomes, numberOfResults);
+    int *countOfFavorableOutcomes = new int[numberOfResults];
+    InitArrayWithZeroes(countOfFavorableOutcomes, numberOfResults);
 
     int *takenTickets = new int[numberOfTakenTickets];
     int *winningTickets = new int[numberOfWinningTickets];
@@ -35,18 +35,18 @@ void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfT
                 if (takenTickets[j] == winningTickets[k])
                     countOfTakenWinningTickets++;
 
-        CountFavorableOutcomes(numberOfFavorableOutcomes, countOfTakenWinningTickets);
+        CountFavorableOutcomes(countOfFavorableOutcomes, countOfTakenWinningTickets);
     }
 
     double *results = new double[numberOfResults];
     InitArrayWithZeroes(results, numberOfResults);
 
     for (int i = 0; i < numberOfResults; i++)
-        results[i] = (double)numberOfFavorableOutcomes[i] / numberOfIterations;
+        results[i] = (double)countOfFavorableOutcomes[i] / numberOfIterations;
 
     ShowResults(results, numberOfResults);
 
-    delete[] numberOfFavorableOutcomes;
+    delete[] countOfFavorableOutcomes;
     delete[] results;
     delete[] takenTickets;
     delete[] winningTickets;
