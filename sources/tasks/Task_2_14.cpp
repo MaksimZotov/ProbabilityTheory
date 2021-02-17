@@ -15,8 +15,8 @@ void Task_2_14::ShowResults(double *results, int n)
 void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
                      int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int))
 {
-    if (numberOfTickets < numberOfWinningTickets) throw "number of tickets must be less than number of winning tickets";
-    if (numberOfTickets < numberOfTakenTickets) throw "number of tickets must be less than number of taken tickets";
+    if (numberOfTickets < numberOfWinningTickets) throw "number of tickets must not be less than number of winning tickets";
+    if (numberOfTickets < numberOfTakenTickets) throw "number of tickets must not be less than number of taken tickets";
 
     int *numberOfFavorableOutcomes = new int[numberOfResults];
     InitArrayWithZeroes(numberOfFavorableOutcomes, numberOfResults);
