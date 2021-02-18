@@ -12,4 +12,4 @@ add_executable(
         headers/helpers/NumberGenerator.h
         sources/tasks/Task_2_14.cpp
         headers/tasks/Task_2_14.h
-)
+        sources/tasks/Task_3_6.cpp headers/tasks/Task_3_6.h)
