@@ -4,8 +4,6 @@
 
 using namespace std;
 
-Task_2_14::Task_2_14() { }
-
 void Task_2_14::ShowResults(double* results, int n)
 {
     for (int i = 0; i < n; i++)

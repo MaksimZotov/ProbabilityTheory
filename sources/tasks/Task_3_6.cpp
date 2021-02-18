@@ -5,9 +5,6 @@
 
 using namespace std;
 
-Task_3_6::Task_3_6() { }
-
-
 bool Task_3_6::CheckIntersectionWithRectangle(double x, double y, double r, double recX, double recY)
 {
     double absX = abs(x);
