@@ -3,8 +3,11 @@
 #include "headers/tasks/Task_2_14.h"
 #include "headers/tasks/Task_3_6.h"
 #include "headers/tasks/Task_4_34.h"
-
-using namespace std;
+#include "headers/tasks/Task_5_27.h"
+#include "headers/tasks/Task_6_19.h"
+#include "headers/tasks/Task_7_17.h"
+#include "headers/tasks/Task_8_40.h"
+#include "headers/tasks/Task_9_8.h"
 
 void DoTask_2_14() {
     Task_2_14 *task = new Task_2_14();
@@ -33,9 +36,38 @@ void DoTask_4_34() {
     delete task;
 }
 
+void DoTask_5_27() {
+    Task_5_27 *task = new Task_5_27();
+    task->Start(1000000, 0.2, 0.3);
+    delete task;
+}
+
+void DoTask_6_19() {
+    Task_6_19 *task = new Task_6_19();
+    task->Start(1000000, 10, 0.2, 0.8);
+    delete task;
+}
+
+void DoTask_7_17() {
+    Task_7_17 *task = new Task_7_17();
+    task->Start(10000000, 3, 1.0 / 3);
+    delete task;
+}
+
+void DoTask_8_40() {
+    Task_8_40 *task = new Task_8_40();
+    task->Start(1000000, 20, 2, 20, 0.5);
+    delete task;
+}
+
+void DoTask_9_8() {
+    Task_9_8 *task = new Task_9_8();
+    task->Start(1000000, 100, 1000);
+    delete task;
+}
 
 int main() {
     srand(time(NULL));
-    DoTask_4_34();
+    // DoTask_m_n();
     return 0;
 }
