@@ -10,8 +10,7 @@ void StartTask_6_19(int numberOfIterations, int numberOfHelicopters, double pHel
 
     for (int i = 0; i < numberOfIterations; i++)
         for (int j = 0; j < numberOfHelicopters; j++) {
-            bool first_area = GetRandomDouble(0, 1) < pFirstArea;
-            if (first_area) {
+            if (GetRandomDouble(0, 1) < pFirstArea) {
                 for (int k = 0; k <= j; k++)
                     if (GetRandomDouble(0, 1) <= pHelicopter) {
                         pHelicopters[j]++;
