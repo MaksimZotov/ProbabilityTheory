@@ -9,7 +9,7 @@ private:
 public:
     Task_2_14();
     void Start(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
-              int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int));
+               int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int));
 };
 
 #endif

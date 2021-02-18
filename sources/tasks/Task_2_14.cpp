@@ -6,14 +6,14 @@ using namespace std;
 
 Task_2_14::Task_2_14() { }
 
-void Task_2_14::ShowResults(double *results, int n)
+void Task_2_14::ShowResults(double* results, int n)
 {
     for (int i = 0; i < n; i++)
         cout << "result " << i + 1 << ": " << results[i] << endl;
 }
 
 void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
-                     int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int))
+                      int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int))
 {
     if (numberOfTickets < numberOfWinningTickets) throw "number of tickets must not be less than number of winning tickets";
     if (numberOfTickets < numberOfTakenTickets) throw "number of tickets must not be less than number of taken tickets";
