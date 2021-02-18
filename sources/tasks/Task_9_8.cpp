@@ -2,19 +2,20 @@
 #include "../../headers/helpers/NumberGenerator.h"
 #include "../../headers/tasks/Task_9_8.h"
 
-using namespace std;
-
-void Task_9_8::Start(int numberOfIterations, int minN, int maxN)
+void StartTask_9_8(int numberOfIterations, int minN, int maxN)
 {
-    int count_uneven = 0;
     int count = 0;
+    int countUneven = 0;
+
     for (int i = 0; i < numberOfIterations; i++)
     {
-        int n = getRandomInt(minN, maxN);
+        int n = GetRandomInt(minN, maxN);
         for (int j = 0; j < n; j++)
-            count_uneven += getRandomInt(0, 1) == 1 ? 1 : 0;
-        if (count_uneven % 2 == 1)
+            countUneven += GetRandomInt(0, 1) == 1 ? 1 : 0;
+        if (countUneven % 2 == 1)
             count++;
     }
-    cout << (double)count / numberOfIterations << endl;
+
+    std::cout << "Task 9.8:" << std::endl;
+    std::cout << "Result: " << (double)count / numberOfIterations << std::endl;
 }

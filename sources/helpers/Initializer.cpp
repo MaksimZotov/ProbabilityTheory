@@ -20,7 +20,7 @@ void InitArrayWithDifferentRandomNumbers(int* array, int n, int a, int b)
 
     for (int j = 0; j < n; j++)
     {
-        int next = getRandomInt(a, b);
+        int next = GetRandomInt(a, b);
         bool again = false;
         for (int k = 0; k < j; k++)
         {

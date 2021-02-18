@@ -3,38 +3,41 @@
 #include "../../headers/helpers/Initializer.h"
 #include "../../headers/tasks/Task_6_19.h"
 
-using namespace std;
-
-void Task_6_19::Start(int numberOfIterations, int numberOfHelicopters, double pHelicopter, double pFirstArea)
+void StartTask_6_19(int numberOfIterations, int numberOfHelicopters, double pHelicopter, double pFirstArea)
 {
     int *pHelicopters = new int[numberOfHelicopters];
     InitArrayWithZeroes(pHelicopters, numberOfHelicopters);
+
     for (int i = 0; i < numberOfIterations; i++)
         for (int j = 0; j < numberOfHelicopters; j++) {
-            bool first_area = getRandomDouble(0, 1) < pFirstArea;
+            bool first_area = GetRandomDouble(0, 1) < pFirstArea;
             if (first_area) {
                 for (int k = 0; k <= j; k++)
-                    if (getRandomDouble(0, 1) <= pHelicopter) {
+                    if (GetRandomDouble(0, 1) <= pHelicopter) {
                         pHelicopters[j]++;
                         break;
                     }
             }
             else {
                 for (int k = j + 1; k < numberOfHelicopters; k++)
-                    if (getRandomDouble(0, 1) <= pHelicopter) {
+                    if (GetRandomDouble(0, 1) <= pHelicopter) {
                         pHelicopters[j]++;
                         break;
                     }
                 }
         }
-    int index_of_max = 0;
-    int max = pHelicopters[index_of_max];
+
+    int indexOfMax = 0;
+    int max = pHelicopters[indexOfMax];
     for (int i = 1; i < numberOfHelicopters; i++)
         if (pHelicopters[i] > max) {
             max = pHelicopters[i];
-            index_of_max = i;
+            indexOfMax = i;
         }
-    cout << "To the first area: " << index_of_max + 1 << endl;
-    cout << "Probability: " << (double)pHelicopters[index_of_max] / numberOfIterations << endl;
+
+    std::cout << "Task 6.19:" << std::endl;
+    std::cout << "To the first area: " << indexOfMax + 1 << std::endl;
+    std::cout << "Probability: " << (double)pHelicopters[indexOfMax] / numberOfIterations << std::endl;
+
     delete[] pHelicopters;
 }

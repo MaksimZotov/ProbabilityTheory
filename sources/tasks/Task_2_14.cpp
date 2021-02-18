@@ -2,19 +2,12 @@
 #include "../../headers/helpers/Initializer.h"
 #include "../../headers/tasks/Task_2_14.h"
 
-using namespace std;
-
-void Task_2_14::ShowResults(double* results, int n)
-{
-    for (int i = 0; i < n; i++)
-        cout << "result " << i + 1 << ": " << results[i] << endl;
-}
-
-void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
+void StartTask_2_14(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
                       int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int))
 {
     if (numberOfTickets < numberOfWinningTickets)
         throw "number of tickets must not be less than number of winning tickets";
+
     if (numberOfTickets < numberOfTakenTickets)
         throw "number of tickets must not be less than number of taken tickets";
 
@@ -44,13 +37,14 @@ void Task_2_14::Start(int numberOfIterations, int numberOfTickets, int numberOfT
     double *results = new double[numberOfResults];
     InitArrayWithZeroes(results, numberOfResults);
 
-    for (int i = 0; i < numberOfResults; i++)
-        results[i] = (double)countOfFavorableOutcomes[i] / numberOfIterations;
+    std::cout << "Task 2.14:" << std::endl;
+    for (int i = 0; i < numberOfResults; i++) {
+        results[i] = (double) countOfFavorableOutcomes[i] / numberOfIterations;
+        std::cout << "Result " << i + 1 << ": " << results[i] << std::endl;
+    }
 
-    ShowResults(results, numberOfResults);
-
-    delete[] countOfFavorableOutcomes;
     delete[] results;
     delete[] takenTickets;
     delete[] winningTickets;
+    delete[] countOfFavorableOutcomes;
 }

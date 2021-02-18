@@ -3,9 +3,17 @@
 #include "../../headers/tasks/Task_3_6.h"
 #include "../../headers/helpers/NumberGenerator.h"
 
-using namespace std;
+void GetRandomPointInsideOfEllipse(double ellA, double ellB, double* x, double* y) {
+    while (true) {
+        *x = GetRandomDouble(-ellA, ellA);
+        *y = GetRandomDouble(-ellB, ellB);
 
-bool Task_3_6::CheckIntersectionWithRectangle(double x, double y, double r, double recX, double recY)
+        if (*x * *x / (ellA * ellA) + *y * *y / (ellB * ellB) <= 1)
+            break;
+    }
+}
+
+bool CheckIntersectionWithRectangle(double x, double y, double r, double recX, double recY)
 {
     double absX = abs(x);
     double absY = abs(y);
@@ -14,7 +22,7 @@ bool Task_3_6::CheckIntersectionWithRectangle(double x, double y, double r, doub
            absX < recX && absY - r <= recY || absY < recY && absX - r <= recX;
 }
 
-bool Task_3_6::CheckNonIntersection(double x, double y, double r, double ellA, double ellB, double recX,
+bool CheckNonIntersection(double x, double y, double r, double ellA, double ellB, double recX,
                           double recY, double circles[][2], int n, double stepX, double epsY)
 {
     for (int i = 0; i < n; i++)
@@ -33,7 +41,7 @@ bool Task_3_6::CheckNonIntersection(double x, double y, double r, double ellA, d
     return true;
 }
 
-void Task_3_6::Start(int numberOfCircleIterations, int numberOfPointIterations, int numberOfCircles, double r,
+void StartTask_3_6(int numberOfCircleIterations, int numberOfPointIterations, int numberOfCircles, double r,
                      double ellA, double ellB, double recX, double recY, double rB, double stepX, double epsY)
 {
     int countA = 0;
@@ -48,13 +56,8 @@ void Task_3_6::Start(int numberOfCircleIterations, int numberOfPointIterations, 
             while (true) {
                 double x;
                 double y;
-                while (true) {
-                    x = getRandomDouble(-ellA, ellA);
-                    y = getRandomDouble(-ellB, ellB);
-                    if (x * x / (ellA * ellA) + y * y / (ellB * ellB) <= 1)
-                        break;
+                GetRandomPointInsideOfEllipse(ellA, ellB, &x, &y);
 
-                }
                 if (CheckNonIntersection(x, y, r, ellA, ellB, recX, recY, (double(*)[2]) circles, j, stepX, epsY)) {
                     circles[j][0] = x;
                     circles[j][1] = y;
@@ -65,12 +68,8 @@ void Task_3_6::Start(int numberOfCircleIterations, int numberOfPointIterations, 
         for (int j = 0; j < numberOfPointIterations; j++) {
             double x;
             double y;
-            while (true) {
-                x = getRandomDouble(-ellA, ellA);
-                y = getRandomDouble(-ellB, ellB);
-                if (x * x / (ellA * ellA) + y * y / (ellB * ellB) <= 1)
-                    break;
-            }
+            GetRandomPointInsideOfEllipse(ellA, ellB, &x, &y);
+
             if (CheckIntersectionWithRectangle(x, y, rB, recX, recY))
                 countB++;
 
@@ -83,10 +82,13 @@ void Task_3_6::Start(int numberOfCircleIterations, int numberOfPointIterations, 
     }
 
     int numberOfIterations = numberOfCircleIterations * numberOfPointIterations;
-    cout << (double)countA / numberOfIterations << endl;
-    cout << (double)countB / numberOfIterations << endl;
+
+    std::cout << "Task 3.6:" << std::endl;
+    std::cout << "Result 1: " << (double)countA / numberOfIterations << std::endl;
+    std::cout << "Result 2: " << (double)countB / numberOfIterations << std::endl;
 
     for (int i = 0; i < numberOfCircles; i++)
         delete[] circles[i];
+
     delete[] circles;
 }
