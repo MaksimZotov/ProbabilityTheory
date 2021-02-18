@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "headers/tasks/Task_2_14.h"
 #include "headers/tasks/Task_3_6.h"
+#include "headers/tasks/Task_4_34.h"
 
 using namespace std;
 
@@ -23,10 +24,22 @@ int main() {
 */
 
 // Task_3_6:
+/*
 int main() {
     srand(time(NULL));
     Task_3_6 *objTask_3_6 = new Task_3_6();
     objTask_3_6->Start(1000, 1000, 4,2.15,
                        100, 10, 5, 1.5, 5, 0.001, 0.01);
+    return 0;
+}
+*/
+
+// Task_4_34:
+int main() {
+    srand(time(NULL));
+    Task_4_34 *objTask_3_6 = new Task_4_34();
+    objTask_3_6->Start(1000000, 30, 10);
+    objTask_3_6->Start(1000000, 30, 5);
+    objTask_3_6->Start(1000000, 150, 35);
     return 0;
 }
