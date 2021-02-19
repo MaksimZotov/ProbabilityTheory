@@ -11,7 +11,7 @@ void StartTask_9_8(int numberOfIterations, int minN, int maxN)
     {
         int n = GetRandomInt(minN, maxN);
         for (int j = 0; j < n; j++)
-            countUneven += GetRandomInt(0, 1) == 1 ? 1 : 0;
+            countUneven += GetRandomInt(0, 1);
         if (countUneven % 2 == 1)
             count++;
     }
