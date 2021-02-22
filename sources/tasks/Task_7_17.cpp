@@ -6,7 +6,8 @@ void StartTask_7_17(int numberOfIterations, int numberOfButches, double percentO
 {
     int count1 = 0;
     int count2 = 0;
-    int n = numberOfIterations;
+    int n = 0;
+    int m = 0;
 
     for (int i = 0; i < numberOfIterations; i++) {
         int butchWithSecondRate = GetRandomInt(1, numberOfButches);
@@ -14,15 +15,20 @@ void StartTask_7_17(int numberOfIterations, int numberOfButches, double percentO
         if (butchWithSecondRate == chosenButch) {
             if (GetRandomDouble(0, 1) > percentOfSecondRate) {
                 count1++;
-                if (GetRandomDouble(0, 1) > percentOfSecondRate)
+                n++;
+                if (GetRandomDouble(0, 1) > percentOfSecondRate) {
                     count2++;
+                    m++;
+                }
             }
-            else
-                n--;
+        }
+        else {
+            n++;
+            m++;
         }
     }
 
     std::cout << "Task 7.17:" << std::endl;
     std::cout << "Result 1: " << (double)count1 / n << std::endl;
-    std::cout << "Result 2: " << (double)count2 / n << std::endl;
+    std::cout << "Result 2: " << (double)count2 / m << std::endl;
 }
