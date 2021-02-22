@@ -16,7 +16,7 @@ void InitArrayWithZeroes(int* array, int n)
 void InitArrayWithDifferentRandomNumbers(int* array, int n, int a, int b)
 {
     if (b - a + 1 < n)
-        throw "b - a + 1 must be less than n";
+        throw "b - a + 1 must not be less than n";
 
     for (int j = 0; j < n; j++)
     {
