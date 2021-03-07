@@ -2,7 +2,7 @@
 #include "../../headers/helpers/NumberGenerator.h"
 #include "../../headers/tasks/Task_7_17.h"
 
-void StartTask_7_17(int numberOfIterations, int numberOfButches, double percentOfSecondRate)
+void StartTask_7_17(int numberOfIterations, int numberOfBatches, double percentOfSecondRate)
 {
     int count1 = 0; // Число случаев, когда 1-ая взятая деталь, оказавшаяся
                     // 1-сортной, была взята из партии с 2-сортными деталями
@@ -20,9 +20,9 @@ void StartTask_7_17(int numberOfIterations, int numberOfButches, double percentO
                     // детяли из той же партии была взята 1-сортная деталь
 
     for (int i = 0; i < numberOfIterations; i++) {
-        int butchWithSecondRate = GetRandomInt(1, numberOfButches);
-        int chosenButch = GetRandomInt(1, numberOfButches);
-        if (butchWithSecondRate == chosenButch) {
+        int butchWithSecondRate = GetRandomInt(1, numberOfBatches);
+        int chosenBatch = GetRandomInt(1, numberOfBatches);
+        if (butchWithSecondRate == chosenBatch) {
             if (GetRandomDouble(0, 1) > percentOfSecondRate) {
                 count1++;
                 n1++;
