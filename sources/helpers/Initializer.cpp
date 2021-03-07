@@ -13,6 +13,7 @@ void InitArrayWithZeroes(int* array, int n)
         array[i] = 0;
 }
 
+// Инициализация массива разными случайными целыми числами из диапазона [a; b]
 void InitArrayWithDifferentRandomNumbers(int* array, int n, int a, int b)
 {
     if (b - a + 1 < n)

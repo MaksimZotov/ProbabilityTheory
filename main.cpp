@@ -12,7 +12,7 @@
 int main() {
     srand(time(NULL));
 
-    StartTask_2_14(10000000, 10, 5,2, 3,
+    StartTask_2_14(10000000, 10, 5, 2, 3,
                    [](int* countOfFavorableOutcomes, int countOfTakenWinningTickets) -> void
                    {
                        if (countOfTakenWinningTickets == 1) countOfFavorableOutcomes[0]++;
@@ -21,7 +21,7 @@ int main() {
                    }
     );
 
-    StartTask_3_6(1000, 1000, 4,2.15,100, 10, 5, 1.5, 5, 0.001, 0.01);
+    StartTask_3_6(1000, 1000, 4,2.15, 100, 10, 5, 1.5, 5, 0.001, 0.01);
 
     StartTask_4_34(1000000, 30, 10);
     StartTask_4_34(1000000, 30, 5);
