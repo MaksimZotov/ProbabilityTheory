@@ -26,4 +26,4 @@ add_executable(
         headers/tasks/Task_8_40.h
         sources/tasks/Task_9_8.cpp
         headers/tasks/Task_9_8.h
-)
+        sources/tasks/Task_10_8.cpp headers/tasks/Task_10_8.h)
