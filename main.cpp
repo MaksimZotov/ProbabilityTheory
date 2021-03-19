@@ -1,12 +1,13 @@
 #include <ctime>
-#include <math.h>
 #include <cstdlib>
 #include "headers/tasks/Task_12_1.h"
 
 int main() {
     srand(time(NULL));
+
+    // Пункт а)
     StartTask_12_1(
-            0.5, 0.0000000001,
+            0.5, 0.0001,
             [](double x) -> double { return (x >= 0 && x <= 1) ? 1 : 0; },
             [](double x) -> double
             {
@@ -15,6 +16,8 @@ int main() {
                 return x;
             }
     );
+
+    // Пункт б)
     StartTask_12_1(
             5, 0.0001,
             [](double x) -> double { return exp(- x * x / 2) * 0.39894228; }, // 0.39894228 =
@@ -29,3 +32,5 @@ int main() {
     );
     return 0;
 }
+
+
