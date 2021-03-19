@@ -25,5 +25,5 @@ void StartTask_11_3(int numberOfIterations, int n, double (*p) (int))
         D += XiPi * Xi;
     }
     D -= M * M;
-    printf("%.5f, %.5f\n", M, D);
+    printf("Task 11.3:\nM = %.5f, D = %.5f\n", M, D);
 }

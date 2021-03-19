@@ -1,11 +1,31 @@
 #include <ctime>
+#include <math.h>
 #include <cstdlib>
-#include "headers/tasks/Task_11_3.h"
+#include "headers/tasks/Task_12_1.h"
 
 int main() {
     srand(time(NULL));
-    StartTask_11_3(1000000, 5,
-                   [](int numberOfElement) -> double { return 0.2 + 0.1 * (numberOfElement - 1); }
+    StartTask_12_1(
+            0.5, 0.0000000001,
+            [](double x) -> double { return (x >= 0 && x <= 1) ? 1 : 0; },
+            [](double x) -> double
+            {
+                if (x < 0) return 0;
+                if (x > 1) return 1;
+                return x;
+            }
+    );
+    StartTask_12_1(
+            5, 0.0001,
+            [](double x) -> double { return exp(- x * x / 2) * 0.39894228; }, // 0.39894228 =
+            [](double x) -> double                                             // = 1 / (2 * pi)^(1/2)
+            {
+                double integral = 0;
+                double h = 0.0001;
+                for (double t = -100; t < x; t += h)
+                    integral += exp(- t * t / 2) * h;
+                return integral * 0.39894228; // 0.39894228 = 1 / (2 * pi)^(1/2)
+            }
     );
     return 0;
 }
