@@ -20,8 +20,6 @@ limit_1_c = 0.0000001
 n_boxes = 6
 m = 5
 d = 4
-p_change_box = 0.1
-q_change_box = 1 - p_change_box
 nExp = 50
 
 colorToNumber = {'Red': 0, 'White': 1, 'Black': 2, 'Green': 3, 'Blue': 4}
