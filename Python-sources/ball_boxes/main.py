@@ -32,9 +32,8 @@ boxes = [[210, 47, 56, 57, 8, 42],
          [250, 83, 22, 56, 23, 66]]
 
 sumBalls = 0
-for i in range(d + 1):
-    for j in range(n_boxes):
-        sumBalls += boxes[j][0]
+for i in range(n_boxes):
+    sumBalls += boxes[i][0]
 
 numerator = c_m_n(d, sumBalls)
 
