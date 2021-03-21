@@ -18,10 +18,13 @@ def c_m_n(m, n):
 n_boxes = 6
 m = 5
 d = 4
-nExp = 500
+nExp = 1000
 
 limit_1_c = 0.0000001
 colorsCount_2_a = {'Red': 0, 'White': 0, 'Black': 0, 'Green': 0, 'Blue': 0}
+colorsCountList_2_с = {'Red': [], 'White': [], 'Black': [], 'Green': [], 'Blue': []}
+for color in colorsCountList_2_с:
+    colorsCountList_2_с[color] = [0] * (nExp + 1)
 
 colorToNumber = {'Red': 0, 'White': 1, 'Black': 2, 'Green': 3, 'Blue': 4}
 
@@ -59,6 +62,9 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
                 ballsQuantity[colorToNumber[colorBall]] += 1
                 colorsCount_2_a[colorBall] += 1
 
+            for colorBall in colorsCount_2_a.keys():
+                colorsCountList_2_с[colorBall][countExp + 1] = colorsCount_2_a[colorBall] / (d * (countExp + 1))
+
             ASlashH = [1] * n_boxes
             for i in range(n_boxes):
                 for j in range(m):
@@ -81,20 +87,19 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
 
 k = np.arange(0, nExp, 1)
 
+
+fig_1_a_b = go.Figure()
+for i in range(n_boxes):
+    fig_1_a_b.add_trace(go.Scatter(x=k, y=HSlashAList[i], name=str(i + 1)))
+fig_1_a_b.show()
+
 count = [0] * (nExp + 1)
 for i in range(n_boxes):
     for j in range(nExp + 1):
         if HSlashAList[i][j] > limit_1_c:
             count[j] += 1
-
-fig_1_a_b = go.Figure()
 fig_1_c = go.Figure()
-
 fig_1_c.add_trace(go.Scatter(x=k, y=count, name='hypothesis'))
-for i in range(n_boxes):
-    fig_1_a_b.add_trace(go.Scatter(x=k, y=HSlashAList[i], name=str(i + 1)))
-
-fig_1_a_b.show()
 fig_1_c.show()
 
 print('2.a:')
@@ -111,3 +116,8 @@ for i in range(n_boxes):
         print(color, '=\t', tp, '\tdif =', abs(tp - colorsCount_2_a[color]))
         DIF += abs(tp - colorsCount_2_a[color])
     print('DIF =\t', DIF, '\n')
+
+fig_2_c = go.Figure()
+for color in colorsCountList_2_с.keys():
+    fig_2_c.add_trace(go.Scatter(x=k, y=colorsCountList_2_с[color], name=color))
+fig_2_c.show()
