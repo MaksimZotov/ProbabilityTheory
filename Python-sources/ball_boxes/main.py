@@ -20,7 +20,7 @@ for i in range(n_boxes):
     HSlashAList[i] = [0] * (nExp + 1)
     HSlashAList[i][0] = 1 / n_boxes
 
-with open('Python-sources/ball_boxes/test.txt') as line:
+with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
     countExp = 0
     H = [1 / n_boxes] * n_boxes
 
