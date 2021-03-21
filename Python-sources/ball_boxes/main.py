@@ -15,12 +15,13 @@ def c_m_n(m, n):
     return denominator / (numeratorLeft * numeratorRight)
 
 
-limit_1_c = 0.0000001
-
 n_boxes = 6
 m = 5
 d = 4
-nExp = 50
+nExp = 500
+
+limit_1_c = 0.0000001
+colorsCount_2_a = {'Red': 0, 'White': 0, 'Black': 0, 'Green': 0, 'Blue': 0}
 
 colorToNumber = {'Red': 0, 'White': 1, 'Black': 2, 'Green': 3, 'Blue': 4}
 
@@ -56,6 +57,7 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
             ballsQuantity = [0] * m
             for colorBall in colorBalls:
                 ballsQuantity[colorToNumber[colorBall]] += 1
+                colorsCount_2_a[colorBall] += 1
 
             ASlashH = [1] * n_boxes
             for i in range(n_boxes):
@@ -94,3 +96,18 @@ for i in range(n_boxes):
 
 fig_1_a_b.show()
 fig_1_c.show()
+
+print('2.a:')
+for item in colorsCount_2_a:
+    colorsCount_2_a[item] /= (nExp * d)
+    print(item, '=\t', colorsCount_2_a[item])
+
+print('\n\n2.b:\n')
+for i in range(n_boxes):
+    print('box ', i + 1, ':')
+    DIF = 0
+    for color in colorToNumber.keys():
+        tp = boxes[i][colorToNumber[color] + 1] / boxes[i][0]
+        print(color, '=\t', tp, '\tdif =', abs(tp - colorsCount_2_a[color]))
+        DIF += abs(tp - colorsCount_2_a[color])
+    print('DIF =\t', DIF, '\n')
