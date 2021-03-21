@@ -3,17 +3,42 @@ import numpy as np
 import copy
 import re
 
+
+def c_m_n(m, n):
+    if m == 0: return 1
+    denominator = 1
+    numeratorLeft = 1
+    numeratorRight = 1
+    for i in range(2, n): denominator *= i
+    for i in range(2, m): numeratorLeft *= i
+    for i in range(2, n - m): numeratorRight *= i
+    return denominator / (numeratorLeft * numeratorRight)
+
+
+limit_1_c = 0.0000001
+
 n_boxes = 6
 m = 5
 d = 4
+p_change_box = 0.1
+q_change_box = 1 - p_change_box
 nExp = 50
 
-boxes = [{'Total': 210, 'Red': 47, 'White': 56, 'Black': 57, 'Green': 8, 'Blue': 42},
-         {'Total': 200, 'Red': 26, 'White': 45, 'Black': 43, 'Green': 47, 'Blue': 39},
-         {'Total': 250, 'Red': 84, 'White': 67, 'Black': 53, 'Green': 40, 'Blue': 6},
-         {'Total': 270, 'Red': 71, 'White': 27, 'Black': 85, 'Green': 53, 'Blue': 34},
-         {'Total': 220, 'Red': 43, 'White': 36, 'Black': 31, 'Green': 46, 'Blue': 64},
-         {'Total': 250, 'Red': 83, 'White': 22, 'Black': 56, 'Green': 23, 'Blue': 66}]
+colorToNumber = {'Red': 0, 'White': 1, 'Black': 2, 'Green': 3, 'Blue': 4}
+
+boxes = [[210, 47, 56, 57, 8, 42],
+         [200, 26, 45, 43, 47, 39],
+         [250, 84, 67, 53, 40, 6],
+         [270, 71, 27, 85, 53, 34],
+         [220, 43, 36, 31, 46, 64],
+         [250, 83, 22, 56, 23, 66]]
+
+sumBalls = 0
+for i in range(d + 1):
+    for j in range(n_boxes):
+        sumBalls += boxes[j][0]
+
+numerator = c_m_n(d, sumBalls)
 
 HSlashAList = [[]] * n_boxes
 for i in range(n_boxes):
@@ -31,12 +56,15 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
             localBoxes = copy.deepcopy(boxes)
             colorBalls = [data[3], data[4], data[5], data[6]]
 
+            ballsQuantity = [0] * m
+            for colorBall in colorBalls:
+                ballsQuantity[colorToNumber[colorBall]] += 1
+
             ASlashH = [1] * n_boxes
             for i in range(n_boxes):
-                for colorBall in colorBalls:
-                    ASlashH[i] *= localBoxes[i][colorBall] / localBoxes[i]['Total']
-                    localBoxes[i][colorBall] -= 1
-                    localBoxes[i]['Total'] -= 1
+                for j in range(m):
+                    ASlashH[i] *= c_m_n(ballsQuantity[j], boxes[i][j + 1])
+                ASlashH[i] /= numerator
 
             HSlashA = [0] * n_boxes
             for i in range(n_boxes):
@@ -54,7 +82,18 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
 
 k = np.arange(0, nExp, 1)
 
-fig = go.Figure()
+count = [0] * (nExp + 1)
 for i in range(n_boxes):
-    fig.add_trace(go.Scatter(x=k, y=HSlashAList[i], name=str(i + 1)))
-fig.show()
+    for j in range(nExp + 1):
+        if HSlashAList[i][j] > limit_1_c:
+            count[j] += 1
+
+fig_1_a_b = go.Figure()
+fig_1_c = go.Figure()
+
+fig_1_c.add_trace(go.Scatter(x=k, y=count, name='hypothesis'))
+for i in range(n_boxes):
+    fig_1_a_b.add_trace(go.Scatter(x=k, y=HSlashAList[i], name=str(i + 1)))
+
+fig_1_a_b.show()
+fig_1_c.show()
