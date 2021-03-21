@@ -18,6 +18,7 @@ def c_m_n(m, n):
 n_boxes = 6
 m = 5
 d = 4
+p_change_box = 0.1
 nExp = 1000
 
 limit_1_c = 0.0000001
@@ -79,7 +80,7 @@ with open('Python-sources/ball_boxes/ball_boxes.txt') as line:
                 HSlashAList[i][countExp + 1] = HSlashA[i]
 
             for i in range(n_boxes):
-                H[i] = HSlashA[i]
+                H[i] = HSlashA[i] * (1 - p_change_box)
 
             countExp += 1
             if countExp == nExp:
