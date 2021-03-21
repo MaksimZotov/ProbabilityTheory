@@ -28,6 +28,7 @@ for color in colorsCountList_2_с:
     colorsCountList_2_с[color] = [0] * (nExp + 1)
 
 colorToNumber = {'Red': 0, 'White': 1, 'Black': 2, 'Green': 3, 'Blue': 4}
+colorsRGB = {'Red': '#FF0000', 'White': '#FFFFFF', 'Black': '#000000', 'Green': '#00FF00', 'Blue': '#0000FF'}
 
 boxes = [[210, 47, 56, 57, 8, 42],
          [200, 26, 45, 43, 47, 39],
@@ -118,7 +119,7 @@ for i in range(n_boxes):
         DIF += abs(tp - colorsCount_2_a[color])
     print('DIF =\t', DIF, '\n')
 
-fig_2_c = go.Figure()
+fig_2_c = go.Figure(layout=go.Layout(paper_bgcolor='#D3D3D3', plot_bgcolor='#708090'))
 for color in colorsCountList_2_с.keys():
-    fig_2_c.add_trace(go.Scatter(x=k, y=colorsCountList_2_с[color], name=color))
+    fig_2_c.add_trace(go.Scatter(x=k, y=colorsCountList_2_с[color], name=color, line=dict(color=colorsRGB[color])))
 fig_2_c.show()
