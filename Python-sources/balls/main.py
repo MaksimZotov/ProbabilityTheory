@@ -7,11 +7,13 @@ N = 290
 m = 6
 limit = 9100
 
+
 H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
 
 steps = 29
-sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
+sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000,
+               2000, 4000, 9000]
 output = []
 
 quantityWithMaxProb = [[] for i in range(m)]
@@ -19,8 +21,6 @@ quantityWithMaxProb = [[] for i in range(m)]
 countTakenBallsAll = 0
 countTakenBalls = [0] * m
 quantityBasedOnFrequency = [[] for i in range(m)]
-
-
 
 with open('Python-sources/balls/task_1_balls.txt') as line:
     countExp = 0
@@ -36,7 +36,9 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             else:
                 break
 
-            if sliderSteps.__contains__(countExp):
+            sliderStepsContainsCountExp = sliderSteps.__contains__(countExp)
+
+            if sliderStepsContainsCountExp:
                 output.append(copy.deepcopy(H))
                 for i in range(m):
                     quantityWithMaxProb[i].append(H[i].index(max(H[i])))
@@ -52,9 +54,9 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
 
                 countTakenBalls[colors.index(data[i])] += 1
             countTakenBallsAll += quantityOfTakenBalls
-            for i in range(m):
-                quantityBasedOnFrequency[i].append((countTakenBalls[i] / countTakenBallsAll) * N * 2.5)
-
+            if sliderStepsContainsCountExp:
+                for i in range(m):
+                    quantityBasedOnFrequency[i].append((countTakenBalls[i] / countTakenBallsAll) * N)
 
             for i in range(m):
                 if ki[i] > 0:
@@ -91,6 +93,7 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                 break
 
 k = np.arange(0, N, 1)
+
 traceList = []
 for i in range(m):
     traceList.append(go.Scatter(visible=True, x=k, y=output[0][i], name=colors[i]))
@@ -103,18 +106,17 @@ fig_1 = go.Figure(data=traceList)
 steps = []
 for i in range(len(output)):
     step = dict(
-        label = sliderSteps[i],
-        method = 'restyle',
-        args = ['visible', [False] * len(fig_1.data)],
+        label=sliderSteps[i],
+        method='restyle',
+        args=['visible', [False] * len(fig_1.data)],
     )
     for j in range(m):
         step['args'][1][m * i + j] = True
     steps.append(step)
 
-sliders = [dict(steps = steps,)]
+sliders = [dict(steps=steps, )]
 fig_1.layout.sliders = sliders
 fig_1.show()
-
 
 fig_2 = go.Figure()
 for i in range(m):
@@ -122,6 +124,7 @@ for i in range(m):
 fig_2.show()
 
 fig_3 = go.Figure()
+sliderSteps.remove(0)
 for i in range(m):
     fig_3.add_trace(go.Scatter(x=sliderSteps, y=quantityBasedOnFrequency[i], name=colors[i]))
 fig_3.show()
