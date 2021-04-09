@@ -16,6 +16,10 @@ output = []
 
 quantityWithMaxProb = [[] for i in range(m)]
 
+countTakenBallsAll = 0
+countTakenBalls = [0] * m
+quantityBasedOnFrequency = [[] for i in range(m)]
+
 
 
 with open('Python-sources/balls/task_1_balls.txt') as line:
@@ -45,6 +49,12 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             ki = [0] * m
             for i in range(len(data) - quantityOfTakenBalls - 1, len(data) - 1):
                 ki[colors.index(data[i])] += 1
+
+                countTakenBalls[colors.index(data[i])] += 1
+            countTakenBallsAll += quantityOfTakenBalls
+            for i in range(m):
+                quantityBasedOnFrequency[i].append((countTakenBalls[i] / countTakenBallsAll) * N * 2.5)
+
 
             for i in range(m):
                 if ki[i] > 0:
@@ -111,4 +121,7 @@ for i in range(m):
     fig_2.add_trace(go.Scatter(x=sliderSteps, y=quantityWithMaxProb[i], name=colors[i]))
 fig_2.show()
 
-
+fig_3 = go.Figure()
+for i in range(m):
+    fig_3.add_trace(go.Scatter(x=sliderSteps, y=quantityBasedOnFrequency[i], name=colors[i]))
+fig_3.show()
