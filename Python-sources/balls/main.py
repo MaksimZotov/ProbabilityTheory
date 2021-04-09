@@ -5,11 +5,16 @@ import re
 
 N = 290
 m = 6
-limit = 5000
+limit = 9100
 
 H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
-removedCombinations = []
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
+
+steps = 29
+sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
+output = []
+
+quantityWithMaxProb = [[] for i in range(m)]
 
 
 
@@ -26,6 +31,11 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                 quantityOfTakenBalls = 3
             else:
                 break
+
+            if sliderSteps.__contains__(countExp):
+                output.append(copy.deepcopy(H))
+                for i in range(m):
+                    quantityWithMaxProb[i].append(H[i].index(max(H[i])))
 
             A_I_Hj = [[0 for i in range(N + 1)] for j in range(m)]
             nA_I_Hj = [[0 for i in range(N + 1)] for j in range(m)]
@@ -66,18 +76,39 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                     for j in range(N + 1):
                         H[i][j] = Hj_I_nA[i][j]
 
-            #test = [0] * m
-            #for i in range(m):
-            #    for j in range(N + 1):
-            #        test[i] += H[i][j]
-            #for i in range(m):
-            #    print(test[i], ' ')
-            #print('\n')
-
             countExp += 1
             if countExp > limit:
                 break
 
+k = np.arange(0, N, 1)
+traceList = []
+for i in range(m):
+    traceList.append(go.Scatter(visible=True, x=k, y=output[0][i], name=colors[i]))
+for i in range(1, steps):
+    for j in range(m):
+        traceList.append(go.Scatter(visible=False, x=k, y=output[i][j], name=colors[j]))
 
+fig_1 = go.Figure(data=traceList)
+
+steps = []
+for i in range(len(output)):
+    step = dict(
+        label = sliderSteps[i],
+        method = 'restyle',
+        args = ['visible', [False] * len(fig_1.data)],
+    )
+    for j in range(m):
+        step['args'][1][m * i + j] = True
+    steps.append(step)
+
+sliders = [dict(steps = steps,)]
+fig_1.layout.sliders = sliders
+fig_1.show()
+
+
+fig_2 = go.Figure()
+for i in range(m):
+    fig_2.add_trace(go.Scatter(x=sliderSteps, y=quantityWithMaxProb[i], name=colors[i]))
+fig_2.show()
 
 
