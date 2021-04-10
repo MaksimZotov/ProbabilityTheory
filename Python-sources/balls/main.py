@@ -95,26 +95,21 @@ for i in range(1, steps):
 figDistributions = go.Figure(data=traceList)
 steps = []
 for i in range(len(distributions)):
-    step = dict(
-        label=sliderSteps[i],
-        method='restyle',
-        args=['visible', [False] * len(figDistributions.data)],
-    )
+    step = dict(label=sliderSteps[i], method='restyle', args=['visible', [False] * len(figDistributions.data)])
     for j in range(m):
         step['args'][1][m * i + j] = True
     steps.append(step)
-sliders = [dict(steps=steps, )]
+sliders = [dict(steps=steps)]
 figDistributions.layout.sliders = sliders
 figDistributions.show()
 
 axisFrom0ToCountExp = np.arange(0, countExp, 1)
-axisFrom1ToCountExp = np.arange(1, countExp, 1)
 figQuantityWithMaxProb = go.Figure()
 figQuantityBasedOnFrequency = go.Figure()
 figCountHypothesis = go.Figure()
 for i in range(m):
     figQuantityWithMaxProb.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=quantityWithMaxProb[i], name=colors[i]))
-    figQuantityBasedOnFrequency.add_trace(go.Scatter(x=axisFrom1ToCountExp, y=quantityBasedOnFrequency[i], name=colors[i]))
+    figQuantityBasedOnFrequency.add_trace(go.Scatter(x=np.arange(1, countExp, 1), y=quantityBasedOnFrequency[i], name=colors[i]))
     figCountHypothesis.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=countHypothesis[i], name=colors[i]))
 figQuantityWithMaxProb.show()
 figQuantityBasedOnFrequency.show()
