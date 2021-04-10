@@ -34,4 +34,6 @@ add_executable(
         C-plus-plus-sources/headers/tasks/Task_12_1.h
         C-plus-plus-sources/sources/tasks/Task_13_24.cpp
         C-plus-plus-sources/headers/tasks/Task_13_24.h
+        C-plus-plus-sources/sources/tasks/Task_19_11.cpp
+        C-plus-plus-sources/headers/tasks/Task_19_11.h
 )
