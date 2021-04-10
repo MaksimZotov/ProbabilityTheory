@@ -11,10 +11,11 @@ limit = 9100
 H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
 
-steps = 29
 sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20,
                30, 40, 50,  100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
-output = []
+steps = len(sliderSteps)
+
+distributions = []
 
 quantityWithMaxProb = [[] for i in range(m)]
 
@@ -49,7 +50,7 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             sliderStepsContainsCountExp = sliderSteps.__contains__(countExp)
 
             if sliderStepsContainsCountExp:
-                output.append(copy.deepcopy(H))
+                distributions.append(copy.deepcopy(H))
                 for i in range(m):
                     quantityWithMaxProb[i].append(H[i].index(max(H[i])))
 
@@ -106,15 +107,15 @@ axisX_1 = np.arange(0, N, 1)
 
 traceList = []
 for i in range(m):
-    traceList.append(go.Scatter(visible=True, x=axisX_1, y=output[0][i], name=colors[i]))
+    traceList.append(go.Scatter(visible=True, x=axisX_1, y=distributions[0][i], name=colors[i]))
 for i in range(1, steps):
     for j in range(m):
-        traceList.append(go.Scatter(visible=False, x=axisX_1, y=output[i][j], name=colors[j]))
+        traceList.append(go.Scatter(visible=False, x=axisX_1, y=distributions[i][j], name=colors[j]))
 
 fig_1 = go.Figure(data=traceList)
 
 steps = []
-for i in range(len(output)):
+for i in range(len(distributions)):
     step = dict(
         label=sliderSteps[i],
         method='restyle',
