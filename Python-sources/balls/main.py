@@ -12,8 +12,8 @@ H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
 
 steps = 29
-sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000,
-               2000, 4000, 9000]
+sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20,
+               30, 40, 50,  100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
 output = []
 
 quantityWithMaxProb = [[] for i in range(m)]
@@ -21,6 +21,9 @@ quantityWithMaxProb = [[] for i in range(m)]
 countTakenBallsAll = 0
 countTakenBalls = [0] * m
 quantityBasedOnFrequency = [[] for i in range(m)]
+
+countColors = [[] for i in range(m)]
+minP = 0.000001
 
 with open('Python-sources/balls/task_1_balls.txt') as line:
     countExp = 0
@@ -35,6 +38,13 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                 quantityOfTakenBalls = 3
             else:
                 break
+
+            for i in range(m):
+                count = 0
+                for j in range(N + 1):
+                    if H[i][j] > minP:
+                        count += 1
+                countColors[i].append(count)
 
             sliderStepsContainsCountExp = sliderSteps.__contains__(countExp)
 
@@ -92,14 +102,14 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             if countExp > limit:
                 break
 
-k = np.arange(0, N, 1)
+axisX_1 = np.arange(0, N, 1)
 
 traceList = []
 for i in range(m):
-    traceList.append(go.Scatter(visible=True, x=k, y=output[0][i], name=colors[i]))
+    traceList.append(go.Scatter(visible=True, x=axisX_1, y=output[0][i], name=colors[i]))
 for i in range(1, steps):
     for j in range(m):
-        traceList.append(go.Scatter(visible=False, x=k, y=output[i][j], name=colors[j]))
+        traceList.append(go.Scatter(visible=False, x=axisX_1, y=output[i][j], name=colors[j]))
 
 fig_1 = go.Figure(data=traceList)
 
@@ -128,3 +138,9 @@ sliderSteps.remove(0)
 for i in range(m):
     fig_3.add_trace(go.Scatter(x=sliderSteps, y=quantityBasedOnFrequency[i], name=colors[i]))
 fig_3.show()
+
+axisX_2 = np.arange(0, countExp, 1)
+fig_4 = go.Figure()
+for i in range(m):
+    fig_4.add_trace(go.Scatter(x=axisX_2, y=countColors[i], name=colors[i]))
+fig_4.show()
