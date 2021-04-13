@@ -1,11 +1,37 @@
 import plotly.graph_objs as go
+from scipy.special import comb
 import numpy as np
 import copy
 import re
 
 N = 290
 m = 6
-limit = 9100
+limit = 1000
+
+startPComb = 1 / comb(N + m - 1, m - 1)
+minPComb = startPComb / 100
+c_2_from_N = comb(N, 2)
+c_3_from_N = comb(N, 3)
+maxCombinations = []
+combinations = {}
+denominator = 29
+for i0 in range(denominator + 1):
+    for i1 in range(denominator - i0 + 1):
+        sum1 = i0 + i1
+        for i2 in range(denominator - sum1 + 1):
+            sum2 = sum1 + i2
+            for i3 in range(denominator - sum2 + 1):
+                sum3 = sum2 + i3
+                for i4 in range(denominator - sum3 + 1):
+                    sum4 = sum3 + i4
+                    i5 = denominator - sum4
+                    if i0 + i1 + i2 + i3 + i4 + i5 == denominator:
+                        combinations[round((i0 / denominator) * N),
+                                     round((i1 / denominator) * N),
+                                     round((i2 / denominator) * N),
+                                     round((i3 / denominator) * N),
+                                     round((i4 / denominator) * N),
+                                     round((i5 / denominator) * N)] = startPComb
 
 H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
@@ -30,9 +56,14 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
         data = re.split(' |, |\n', line.readline())
 
         if len(data) != 0 and data[0] == '#':
-            if len(data) == 6: quantityOfTakenBalls = 2
-            elif len(data) == 7: quantityOfTakenBalls = 3
-            else: break
+            if len(data) == 6:
+                quantityOfTakenBalls = 2
+                denominator = c_2_from_N
+            elif len(data) == 7:
+                quantityOfTakenBalls = 3
+                denominator = c_3_from_N
+            else:
+                break
 
             for i in range(m):
                 count = 0
@@ -59,6 +90,26 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                 quantityBasedOnFrequency[i].append((countTakenBalls[i] / countTakenBallsAll) * N)
 
                 quantityWithMaxProb[i].append(H[i].index(max(H[i])))
+
+            combinationsCopy_A_I_H = copy.deepcopy(combinations)
+            sumCombinationsCopy_A_I_H = 0
+            for combination in combinationsCopy_A_I_H:
+                if combinations[combination] < minPComb:
+                    combinations.pop(combination)
+                    continue
+                combinationsCopy_A_I_H[combination] = 1
+                for i in range(m):
+                    combinationsCopy_A_I_H[combination] *= comb(combination[i], ki[i])
+                combinationsCopy_A_I_H[combination] /= denominator
+                sumCombinationsCopy_A_I_H += combinations[combination] * combinationsCopy_A_I_H[combination]
+            maxP = 0
+            maxComb = (0, 0, 0, 0, 0, 0)
+            for combination in combinations:
+                combinations[combination] = combinations[combination] * combinationsCopy_A_I_H[combination] / sumCombinationsCopy_A_I_H
+                if combinations[combination] > maxP:
+                    maxP = combinations[combination]
+                    maxComb = combination
+            maxCombinations.append((maxComb, maxP))
 
             for i in range(m):
                 if ki[i] > 0:
