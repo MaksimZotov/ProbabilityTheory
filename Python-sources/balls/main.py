@@ -6,7 +6,7 @@ import re
 
 N = 290
 m = 6
-limit = 1000
+limit = 9100
 
 startPComb = 1 / comb(N + m - 1, m - 1)
 minPComb = startPComb / 100
@@ -14,6 +14,7 @@ c_2_from_N = comb(N, 2)
 c_3_from_N = comb(N, 3)
 maxCombinations = []
 combinations = {}
+countHypothesisComb = []
 denominator = 29
 for i0 in range(denominator + 1):
     for i1 in range(denominator - i0 + 1):
@@ -91,6 +92,7 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
 
                 quantityWithMaxProb[i].append(H[i].index(max(H[i])))
 
+            countHypothesisComb.append(len(combinations))
             combinationsCopy_A_I_H = copy.deepcopy(combinations)
             sumCombinationsCopy_A_I_H = 0
             for combination in combinationsCopy_A_I_H:
@@ -134,9 +136,17 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                     for j in range(N + 1): H[i][j] = Hj_I_nA[i][j]
 
             countExp += 1
-            if countExp > limit: break
+            if countExp > limit:
+                break
+
+combEachColor = [[] for i in range(m)]
+for i in range(m):
+    for combination in maxCombinations:
+        combEachColor[i].append(combination[0][i])
 
 axisFrom0ToN = np.arange(0, N, 1)
+axisFrom0ToCountExp = np.arange(0, countExp, 1)
+
 traceList = []
 for i in range(m):
     traceList.append(go.Scatter(visible=True, x=axisFrom0ToN, y=distributions[0][i], name=colors[i]))
@@ -154,14 +164,19 @@ sliders = [dict(steps=steps)]
 figDistributions.layout.sliders = sliders
 figDistributions.show()
 
-axisFrom0ToCountExp = np.arange(0, countExp, 1)
+figDistributionsComb = go.Figure()
+figCountHypothesisComp = go.Figure()
 figQuantityWithMaxProb = go.Figure()
 figQuantityBasedOnFrequency = go.Figure()
 figCountHypothesis = go.Figure()
+figCountHypothesisComp.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=countHypothesisComb))
 for i in range(m):
+    figDistributionsComb.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=combEachColor[i], name=colors[i]))
     figQuantityWithMaxProb.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=quantityWithMaxProb[i], name=colors[i]))
     figQuantityBasedOnFrequency.add_trace(go.Scatter(x=np.arange(1, countExp, 1), y=quantityBasedOnFrequency[i], name=colors[i]))
     figCountHypothesis.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=countHypothesis[i], name=colors[i]))
+figDistributionsComb.show()
+figCountHypothesisComp.show()
 figQuantityWithMaxProb.show()
 figQuantityBasedOnFrequency.show()
 figCountHypothesis.show()
