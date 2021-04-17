@@ -47,8 +47,8 @@ countTakenBallsAll = 0
 countTakenBalls = [0] * m
 quantityBasedOnFrequency = [[] for i in range(m)]
 
-countHypothesis = [[] for i in range(m)]
-minP = 0.000001
+countHypothesisEachColor = [[] for i in range(m)]
+minPEachColor = 0.000001
 
 with open('Python-sources/balls/task_1_balls.txt') as line:
     countExp = 0
@@ -69,21 +69,21 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             for i in range(m):
                 count = 0
                 for j in range(N + 1):
-                    if H[i][j] > minP:
+                    if H[i][j] > minPEachColor:
                         count += 1
-                countHypothesis[i].append(count)
+                countHypothesisEachColor[i].append(count)
 
             if sliderSteps.__contains__(countExp):
                 distributions.append(copy.deepcopy(H))
 
-            A_I_Hj = [[0 for i in range(N + 1)] for j in range(m)]
-            nA_I_Hj = [[0 for i in range(N + 1)] for j in range(m)]
-            Hj_I_A = [[0 for i in range(N + 1)] for j in range(m)]
-            Hj_I_nA = [[0 for i in range(N + 1)] for j in range(m)]
+            A_I_H = [[0 for i in range(N + 1)] for j in range(m)]
+            nA_I_H = [[0 for i in range(N + 1)] for j in range(m)]
+            H_I_A = [[0 for i in range(N + 1)] for j in range(m)]
+            H_I_nA = [[0 for i in range(N + 1)] for j in range(m)]
 
-            ki = [0] * m
+            localCountTakenBalls = [0] * m
             for i in range(len(data) - quantityOfTakenBalls - 1, len(data) - 1):
-                ki[colors.index(data[i])] += 1
+                localCountTakenBalls[colors.index(data[i])] += 1
 
                 countTakenBalls[colors.index(data[i])] += 1
             countTakenBallsAll += quantityOfTakenBalls
@@ -101,7 +101,7 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                     continue
                 combinationsCopy_A_I_H[combination] = 1
                 for i in range(m):
-                    combinationsCopy_A_I_H[combination] *= comb(combination[i], ki[i])
+                    combinationsCopy_A_I_H[combination] *= comb(combination[i], localCountTakenBalls[i])
                 combinationsCopy_A_I_H[combination] /= denominator
                 sumCombinationsCopy_A_I_H += combinations[combination] * combinationsCopy_A_I_H[combination]
             maxP = 0
@@ -114,26 +114,26 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             maxCombinations.append((maxComb, maxP))
 
             for i in range(m):
-                if ki[i] > 0:
-                    for j in range(N + 1): A_I_Hj[i][j] += (j / N) ** ki[i]
+                if localCountTakenBalls[i] > 0:
+                    for j in range(N + 1): A_I_H[i][j] += (j / N) ** localCountTakenBalls[i]
                 else:
-                    for j in range(N + 1): nA_I_Hj[i][j] += (N - j) / N
+                    for j in range(N + 1): nA_I_H[i][j] += (N - j) / N
 
             for i in range(m):
-                if ki[i] > 0:
+                if localCountTakenBalls[i] > 0:
                     E = 0
-                    for j in range(N + 1): E += H[i][j] * A_I_Hj[i][j]
-                    for j in range(N + 1): Hj_I_A[i][j] += H[i][j] * A_I_Hj[i][j] / E
+                    for j in range(N + 1): E += H[i][j] * A_I_H[i][j]
+                    for j in range(N + 1): H_I_A[i][j] += H[i][j] * A_I_H[i][j] / E
                 else:
                     E = 0
-                    for j in range(N + 1): E += H[i][j] * nA_I_Hj[i][j]
-                    for j in range(N + 1): Hj_I_nA[i][j] += H[i][j] * nA_I_Hj[i][j] / E
+                    for j in range(N + 1): E += H[i][j] * nA_I_H[i][j]
+                    for j in range(N + 1): H_I_nA[i][j] += H[i][j] * nA_I_H[i][j] / E
 
             for i in range(m):
-                if ki[i] > 0:
-                    for j in range(N + 1): H[i][j] = Hj_I_A[i][j]
+                if localCountTakenBalls[i] > 0:
+                    for j in range(N + 1): H[i][j] = H_I_A[i][j]
                 else:
-                    for j in range(N + 1): H[i][j] = Hj_I_nA[i][j]
+                    for j in range(N + 1): H[i][j] = H_I_nA[i][j]
 
             countExp += 1
             if countExp > limit:
@@ -174,7 +174,7 @@ for i in range(m):
     figDistributionsComb.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=combEachColor[i], name=colors[i]))
     figQuantityWithMaxProb.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=quantityWithMaxProb[i], name=colors[i]))
     figQuantityBasedOnFrequency.add_trace(go.Scatter(x=np.arange(1, countExp, 1), y=quantityBasedOnFrequency[i], name=colors[i]))
-    figCountHypothesis.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=countHypothesis[i], name=colors[i]))
+    figCountHypothesis.add_trace(go.Scatter(x=axisFrom0ToCountExp, y=countHypothesisEachColor[i], name=colors[i]))
 figDistributionsComb.show()
 figCountHypothesisComp.show()
 figQuantityWithMaxProb.show()
