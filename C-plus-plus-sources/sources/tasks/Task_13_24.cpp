@@ -15,5 +15,5 @@ void StartTask_13_24(double n)
     double D = 0;
     for (double x = 0; x < inf; x += h)
         D += pow(x - M, 2) * (1 / (pow(2, n / 2) * GFun) * pow(x, n / 2 - 1) * exp(- x / 2)) * h;
-    printf("Task 12.1:\nn = %.10f\nM = %.10f\nD = %.10f\n", n, M, D);
+    printf("Task 13.24:\nn = %.10f\nM = %.10f\nD = %.10f\n", n, M, D);
 }
