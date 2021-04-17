@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../../headers/helpers/NumberGenerator.h"
 #include "../../headers/helpers/Initializer.h"
-#include "../../headers/tasks/Task_6_19.h"
 
 void StartTask_6_19(int numberOfIterations, int numberOfHelicopters, double pHelicopter, double pFirstArea)
 {

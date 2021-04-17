@@ -1,6 +1,5 @@
 #include <iostream>
 #include <math.h>
-#include "../../headers/tasks/Task_3_6.h"
 #include "../../headers/helpers/NumberGenerator.h"
 
 // Генерирует случайную точку (x; y), лежащую в эллипсе с параметрами a = ellA, b = ellB

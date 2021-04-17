@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../../headers/helpers/NumberGenerator.h"
-#include "../../headers/tasks/Task_5_27.h"
 
 void StartTask_5_27(int numberOfIterations, double p1, double p2) {
     int count = 0;

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../../headers/helpers/Initializer.h"
-#include "../../headers/tasks/Task_2_14.h"
 
 void StartTask_2_14(int numberOfIterations, int numberOfTickets, int numberOfTakenTickets,
                     int numberOfWinningTickets, int numberOfResults, void (*CountFavorableOutcomes) (int*, int))

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include "../../headers/helpers/NumberGenerator.h"
-#include "../../headers/tasks/Task_19_11.h"
 
 void StartTask_19_11(int numberOfIterations, double a)
 {
@@ -23,5 +22,5 @@ void StartTask_19_11(int numberOfIterations, double a)
         y[2] = GetRandomInt(0, 1) == 0 ? a : -a;
         s += abs((x[1] - x[0]) * (y[2] - y[0]) - (x[2] - x[0]) * (y[1] - y[0])) / 2;
     }
-    printf("Task 19.11:\na = %.10f\nMedian = %.10f\n", a, s / numberOfIterations);
+    printf("Task 19.11:\na = %.10f\nResult = %.10f\n", a, s / numberOfIterations);
 }

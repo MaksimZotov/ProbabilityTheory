@@ -1,5 +1,4 @@
 #include <iostream>
-#include "../../headers/tasks/Task_12_1.h"
 
 void StartTask_12_1(double x, double dx, double (*densityFun) (double x), double (*distributionFun) (double x))
 {

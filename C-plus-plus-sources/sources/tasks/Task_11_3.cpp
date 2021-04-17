@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../../headers/helpers/NumberGenerator.h"
 #include "../../headers/helpers/Initializer.h"
-#include "../../headers/tasks/Task_11_3.h"
 
 void StartTask_11_3(int numberOfIterations, int n, double (*p) (int))
 {

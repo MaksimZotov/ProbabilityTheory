@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../../headers/helpers/NumberGenerator.h"
-#include "../../headers/tasks/Task_7_17.h"
 
 void StartTask_7_17(int numberOfIterations, int numberOfBatches, double percentOfSecondRate)
 {

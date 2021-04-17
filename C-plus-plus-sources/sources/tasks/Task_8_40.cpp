@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../../headers/helpers/Initializer.h"
 #include "../../headers/helpers/NumberGenerator.h"
-#include "../../headers/tasks/Task_8_40.h"
 
 void StartTask_8_40(int numberOfIterations, int numberOfWhite, int numberOfBlack, int maxN, double p)
 {

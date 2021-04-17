@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../../headers/helpers/NumberGenerator.h"
-#include "../../headers/tasks/Task_9_8.h"
 
 void StartTask_9_8(int numberOfIterations, int minN, int maxN)
 {

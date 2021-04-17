@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include "../../headers/tasks/Task_13_24.h"
 
 void StartTask_13_24(double n)
 {
