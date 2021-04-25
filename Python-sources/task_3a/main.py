@@ -41,15 +41,6 @@ with open('Python-sources/task_3a/Task_3a.txt') as line:
             count = 0
     listOfValuesFloat.sort()
 
-    # Определение мат. ожидания
-    M = listOfValuesFloat[int(N / 2)]
-
-    # Поиск дисперсии
-    sigma = 0
-    for i in range(N):
-        sigma += (M - listOfValuesFloat[i]) ** 2
-    D = sigma / N
-
     # Функция распределения
     F = []
     x_for_F = []
@@ -78,6 +69,18 @@ with open('Python-sources/task_3a/Task_3a.txt') as line:
     if curCount > 0:
         for j in range(curCount):
             f.append(curCount / N)
+
+    # Грубое приближение мат. ожидания через среднее арифметическое
+    M = 0
+    for i in range(N):
+        M += listOfValuesFloat[i]
+    M /= N
+
+    # Поиск дисперсии
+    sigma = 0
+    for i in range(N):
+        sigma += (M - listOfValuesFloat[i]) ** 2
+    D = sigma / N
 
     # Определение h_opt
     h_opt = 1.06 * math.sqrt(D) * (N ** (- 1 / 5))
