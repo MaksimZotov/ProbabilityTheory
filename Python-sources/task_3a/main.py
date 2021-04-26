@@ -1,7 +1,6 @@
-import plotly.graph_objs as go
-from scipy.special import comb
-import numpy as np
-import copy
+from scipy.stats import kurtosis
+from scipy.stats import skew
+from numpy import quantile
 import random
 import re
 import math
@@ -39,7 +38,25 @@ with open('Python-sources/task_3a/Task_3a.txt') as line:
         if count == N / parts:
             part += 1
             count = 0
+
+    # Сортировка 10 выборок
+    for listPart in listsParts:
+        listPart.sort()
+
+    # Сортировка основной выборки
     listOfValuesFloat.sort()
+
+    # Построение функции распределения для 10 выборок
+    F_10 = []
+    x_for_F_10 = []
+    for i in range(parts):
+        F_10.append([])
+        x_for_F_10.append([])
+        for j in range(int(N / parts)):
+            x_for_F_10[i].append(listsParts[i][j])
+            x_for_F_10[i].append(listsParts[i][j])
+            F_10[i].append(j / int(N / parts))
+            F_10[i].append((j + 1) / int(N / parts))
 
     # Функция распределения
     F = []
@@ -85,19 +102,27 @@ with open('Python-sources/task_3a/Task_3a.txt') as line:
     # Определение h_opt
     h_opt = 1.06 * math.sqrt(D) * (N ** (- 1 / 5))
 
-    # Ядерная оценка плотности
-    f_KDE = []
-    for value in listOfValuesFloat:
-        f_KDE.append(p_KDE(value))
+    #f_KDE = []
+    #for value in listOfValuesFloat:
+    #    f_KDE.append(p_KDE(value))
 
-fig1 = go.Figure()
-fig1.add_trace(go.Scatter(x=x_for_F, y=F))
-fig1.show()
+    print("Асимметрия: ", skew(listOfValuesFloat))
+    print("Эксцесс: ", kurtosis(listOfValuesFloat))
+    print("Квантиль: ", quantile(listOfValuesFloat, 0.95))
 
-fig2 = go.Figure()
-fig2.add_trace(go.Scatter(x=x_for_f, y=f))
-fig2.show()
+#fig0 = go.Figure()
+#for i in range(parts):
+#   fig0.add_trace(go.Scatter(x=x_for_F_10[i], y=F_10[i]))
+#fig0.show()
+#
+#fig1 = go.Figure()
+#fig1.add_trace(go.Scatter(x=x_for_F, y=F))
+#fig1.show()
+#
+#fig2 = go.Figure()
+#fig2.add_trace(go.Scatter(x=x_for_f, y=f))
+#fig2.show()
 
-fig3 = go.Figure()
-fig3.add_trace(go.Scatter(x=listOfValuesFloat, y=f_KDE))
-fig3.show()
+#fig3 = go.Figure()
+#fig3.add_trace(go.Scatter(x=listOfValuesFloat, y=f_KDE))
+#fig3.show()
