@@ -1,5 +1,5 @@
-from copy import copy, deepcopy
 import plotly.graph_objs as go
+from copy import deepcopy
 import random
 import numpy
 
@@ -19,7 +19,7 @@ symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
                     'S8': {3: 30, 4: 150, 5: 1000},
                     'Scatter': {2: 100, 3: 600, 4: 1200, 5: 2400}}
 
-symbols_all = ['Wild', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter']
+symbols_all = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter']
 
 matrix = [['any', 'any', 'any'],
           ['any', 'any', 'any'],
@@ -57,11 +57,11 @@ while money > 0:
     money -= 5
     create_matrix(matrix)
 
+    wild_n = random.randint(0, 2)
     wild_indexes = []
-    for i in range(columns):
-        for j in range(rows):
-            if matrix[i][j] == 'Wild':
-                wild_indexes.append([i, j])
+    for i in range(wild_n):
+        wild_indexes.append([random.randint(0, len(matrix) - 1), random.randint(0, len(matrix[0]) - 1)])
+        matrix[wild_indexes[i][0]][wild_indexes[i][1]] = 'Wild'
 
     matrix_variants = []
     symbols_keys_without_scatter = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
@@ -110,9 +110,6 @@ while money > 0:
                             matrix_variant[wild_indexes[3][0]][wild_indexes[3][1]] = s4
                             matrix_variant[wild_indexes[4][0]][wild_indexes[4][1]] = s5
                             matrix_variants.append(matrix_variant)
-
-    if len(wild_indexes) == 0:
-        matrix_variants.append(matrix)
 
     prize = 0
     matrix_prize = []
