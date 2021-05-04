@@ -6,7 +6,7 @@ import numpy
 columns = 5
 rows = 3
 
-money = 1000
+money = 100000
 money_list = []
 
 symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
@@ -53,11 +53,11 @@ def get_prize(lines):
 
 
 money_list.append(money)
-while money > 0:
+while 0 < money < 1000000:
     money -= 5
     create_matrix(matrix)
 
-    wild_n = random.randint(0, 2)
+    wild_n = 1
     wild_indexes = []
     for i in range(wild_n):
         wild_indexes.append([random.randint(0, len(matrix) - 1), random.randint(0, len(matrix[0]) - 1)])
