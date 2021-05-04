@@ -66,7 +66,7 @@ while money > 0:
     matrix_variants = []
     symbols_keys_without_scatter = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
     n = len(symbols_to_prize)
-    m = len(wild_indexes)
+    m = wild_n
     for s1 in symbols_keys_without_scatter:
         if m == 1:
             matrix_variant = deepcopy(matrix)
@@ -110,6 +110,9 @@ while money > 0:
                             matrix_variant[wild_indexes[3][0]][wild_indexes[3][1]] = s4
                             matrix_variant[wild_indexes[4][0]][wild_indexes[4][1]] = s5
                             matrix_variants.append(matrix_variant)
+
+    if wild_n == 0:
+        matrix_variants.append(matrix)
 
     prize = 0
     matrix_prize = []
