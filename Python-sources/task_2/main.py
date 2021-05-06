@@ -11,7 +11,7 @@ def sum_p_Bernoulli(p, m_left, m_right, n):
         result += (comb(n, m) * (p ** m) * ((1 - p) ** (n - m)))
     return result
 
-def prob_outcomes(symbol_to_prob, quantities, columns, rows):
+def prob_outcomes(symbol_to_prob, columns, rows):
     result = {}
     wild_prob = symbol_to_prob['Wild']
     scatter_prob = symbol_to_prob['Scatter']
@@ -19,13 +19,26 @@ def prob_outcomes(symbol_to_prob, quantities, columns, rows):
     for symbol in symbol_to_prob:
         if symbol == 'Wild' or symbol == "Scatter":
             continue
-        for k in quantities:
-            p = symbol_to_prob[symbol]
-            result[(symbol, k, 'scatter_lower_2')] = ((wild_prob + p) ** k) * sum_p_Bernoulli(scatter_prob, 0, 1, n - k)
-            result[(symbol, k, 'scatter_2')] = ((wild_prob + p) ** k) * sum_p_Bernoulli(scatter_prob, 2, 2, n - k)
-            result[(symbol, k, 'scatter_3')] = ((wild_prob + p) ** k) * sum_p_Bernoulli(scatter_prob, 3, 3, n - k)
-            result[(symbol, k, 'scatter_4')] = ((wild_prob + p) ** k) * sum_p_Bernoulli(scatter_prob, 4, 4, n - k)
-            result[(symbol, k, 'scatter_greater_4')] = ((wild_prob + p) ** k) * sum_p_Bernoulli(scatter_prob, 5, n - k, n - k)
+        p = symbol_to_prob[symbol]
+
+        result[(symbol, 3, 'scatter_lower_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 3)
+        result[(symbol, 3, 'scatter_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 3)
+        result[(symbol, 3, 'scatter_3')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 3)
+        result[(symbol, 3, 'scatter_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 3)
+        result[(symbol, 3, 'scatter_greater_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 3, n - 3)
+
+        result[(symbol, 4, 'scatter_lower_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 4)
+        result[(symbol, 4, 'scatter_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 4)
+        result[(symbol, 4, 'scatter_3')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 4)
+        result[(symbol, 4, 'scatter_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 4)
+        result[(symbol, 4, 'scatter_greater_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 4, n - 4)
+
+        result[(symbol, 5, 'scatter_lower_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 5)
+        result[(symbol, 5, 'scatter_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 5)
+        result[(symbol, 5, 'scatter_3')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 5)
+        result[(symbol, 5, 'scatter_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 5)
+        result[(symbol, 5, 'scatter_greater_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 5, n - 5, n - 5)
+
     return result
 
 symbol_to_prob = {'S1': 0.37,
@@ -39,7 +52,7 @@ symbol_to_prob = {'S1': 0.37,
                   'Wild': 0.0075,
                   'Scatter': 0.0025}
 
-symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
+symbols_to_prize = {'S1': {3: 3, 4: 20, 5: 45},
                     'S2': {3: 5, 4: 30, 5: 75},
                     'S3': {3: 7, 4: 50, 5: 150},
                     'S4': {3: 9, 4: 60, 5: 250},
@@ -48,118 +61,36 @@ symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
                     'S7': {3: 20, 4: 120, 5: 750},
                     'S8': {3: 30, 4: 150, 5: 1000}}
 
-scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter_4': 75, 'scatter_greater_4': 100}
-
-quantities = [3, 4, 5]
+scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 300, 'scatter_3': 600, 'scatter_4': 1200, 'scatter_greater_4': 2400}
 
 
 columns = 5
 rows = 3
 
-probs_outcomes = prob_outcomes(symbol_to_prob, quantities, columns, rows)
+probs_outcomes = prob_outcomes(symbol_to_prob, columns, rows)
 
-x_axis = []
-y_axis = []
+EV = 0
+wager = 1
+p_get_prize = 0
 for symbol_quantity_scatter in probs_outcomes:
+    p_get_prize += probs_outcomes[symbol_quantity_scatter]
     symbol = symbol_quantity_scatter[0]
     quantity = symbol_quantity_scatter[1]
     scatter = symbol_quantity_scatter[2]
-    x_axis.append(symbols_to_prize[symbol][quantity] * scatter_to_x[scatter])
-    y_axis.append(probs_outcomes[symbol_quantity_scatter])
-
-figure = go.Figure()
-figure.add_trace(go.Scatter(x=x_axis, y=y_axis))
-figure.show()
+    EV += probs_outcomes[symbol_quantity_scatter] * (symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] - wager)
+EV += (1 - p_get_prize) * (-wager)
 
 debug = 0
-
 
 
 money = 10000
 money_list = []
 
-symbols_all = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter', 'Wild']
-
-matrix = [['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Scatter', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Scatter', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Scatter', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Scatter', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Scatter', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Scatter', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Scatter', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Wild',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Wild', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Wild', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Wild', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Wild', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Wild', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Wild', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Wild', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8'],
-          ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Scatter', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Scatter', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Scatter', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Scatter', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Scatter', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Scatter', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Scatter', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Wild',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Wild', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Wild', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Wild', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Wild', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Wild', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Wild', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Wild', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8'],
-          ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Scatter', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Scatter', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Scatter', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Scatter', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Scatter', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Scatter', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Scatter', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Wild',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Wild', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Wild', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Wild', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Wild', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Wild', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Wild', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Wild', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8'],
-          ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Scatter', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Scatter', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Scatter', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Scatter', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Scatter', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Scatter', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Scatter', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Wild',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Wild', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Wild', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Wild', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Wild', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Wild', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Wild', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Wild', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8'],
-          ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Scatter',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Scatter', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Scatter', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Scatter', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Scatter', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Scatter', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Scatter', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Scatter', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'Wild',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'Wild', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'Wild', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'S5', 'Wild', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'S3', 'S4', 'Wild', 'S5', 'S6', 'S7', 's8',
-           'S1', 'S2', 'S3', 'Wild', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'S2', 'Wild', 's3', 'S4', 'S5', 'S6', 'S7', 'S8',
-           'S1', 'Wild', 'S2', 's3', 'S4', 'S5', 'S6', 'S7', 'S8']]
+matrix = [['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any']]
 
 
 def create_matrix(matrix):
