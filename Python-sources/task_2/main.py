@@ -41,18 +41,18 @@ def prob_outcomes(symbol_to_prob, columns, rows):
 
     return result
 
-symbol_to_prob = {'S1': 0.37,
-                  'S2': 0.2,
-                  'S3': 0.12,
-                  'S4': 0.1,
-                  'S5': 0.08,
-                  'S6': 0.06,
-                  'S7': 0.04,
-                  'S8': 0.02,
-                  'Wild': 0.0075,
-                  'Scatter': 0.0025}
+symbol_to_prob = {'S1': 0.18,
+                  'S2': 0.16,
+                  'S3': 0.15,
+                  'S4': 0.13,
+                  'S5': 0.11,
+                  'S6': 0.09,
+                  'S7': 0.07,
+                  'S8': 0.05,
+                  'Wild': 0.04,
+                  'Scatter': 0.02}
 
-symbols_to_prize = {'S1': {3: 3, 4: 20, 5: 45},
+symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
                     'S2': {3: 5, 4: 30, 5: 75},
                     'S3': {3: 7, 4: 50, 5: 150},
                     'S4': {3: 9, 4: 60, 5: 250},
@@ -61,7 +61,7 @@ symbols_to_prize = {'S1': {3: 3, 4: 20, 5: 45},
                     'S7': {3: 20, 4: 120, 5: 750},
                     'S8': {3: 30, 4: 150, 5: 1000}}
 
-scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 300, 'scatter_3': 600, 'scatter_4': 1200, 'scatter_greater_4': 2400}
+scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter_4': 75, 'scatter_greater_4': 100}
 
 
 columns = 5
@@ -80,7 +80,7 @@ for symbol_quantity_scatter in probs_outcomes:
     EV += probs_outcomes[symbol_quantity_scatter] * (symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] - wager)
 EV += (1 - p_get_prize) * (-wager)
 
-debug = 0
+PRIZE_EXPECTED = EV
 
 
 money = 10000
@@ -95,12 +95,14 @@ matrix = [['any', 'any', 'any'],
 
 def create_matrix(matrix):
     for i in range(len(matrix)):
-        column = matrix[i]
-        column_len = len(column)
-        column_copy = deepcopy(column)
-        rnd = random.randint(1, column_len)
-        for j in range(column_len):
-            column[(rnd + j) % column_len] = column_copy[j]
+        for j in range(len(matrix[i])):
+            sigma = 0
+            rnd = random.random()
+            for symbol in symbol_to_prob:
+                sigma += symbol_to_prob[symbol]
+                if sigma >= rnd:
+                    matrix[i][j] = symbol
+                    break
 
 
 def get_prize(lines):
@@ -120,10 +122,30 @@ def get_prize(lines):
             prize += symbols_to_prize[symbol][count]
     return prize
 
+def get_prize_from_line(line):
+    prize = 0
+    count = 1
+    prev = line[0]
+    for i in range(1, len(line)):
+        next = line[i]
+        if next == prev:
+            count += 1
+        else:
+            break
+        prev = next
+    symbol = line[0]
+    if count >= 3 and symbol != 'Scatter':
+        prize += symbols_to_prize[symbol][count]
+    return prize
+
 
 money_list.append(money)
-while 0 < money < 20000:
-    money -= 5
+prize_list_1 = []
+prize_list_2 = []
+prize_list_3 = []
+prize_list_4 = []
+prize_list_5 = []
+for i in range(100000):
     create_matrix(matrix)
 
     wild_indexes = []
@@ -183,36 +205,74 @@ while 0 < money < 20000:
     if len(wild_indexes) == 0:
         matrix_variants.append(matrix)
 
-    prize = 0
-    matrix_prize = []
+    prize_1 = 0
+    prize_2 = 0
+    prize_3 = 0
+    prize_4 = 0
+    prize_5 = 0
     for matrix_variant in matrix_variants:
         line_1 = [matrix_variant[0][0], matrix_variant[1][0], matrix_variant[2][0], matrix_variant[3][0], matrix_variant[4][0]]
         line_2 = [matrix_variant[0][1], matrix_variant[1][1], matrix_variant[2][1], matrix_variant[3][1], matrix_variant[4][1]]
         line_3 = [matrix_variant[0][2], matrix_variant[1][2], matrix_variant[2][2], matrix_variant[3][2], matrix_variant[4][2]]
         line_4 = [matrix_variant[0][0], matrix_variant[1][1], matrix_variant[2][2], matrix_variant[3][1], matrix_variant[4][0]]
         line_5 = [matrix_variant[0][2], matrix_variant[1][1], matrix_variant[2][0], matrix_variant[3][1], matrix_variant[4][2]]
-        lines = [line_1, line_2, line_3, line_4, line_5]
-        cur_prize = get_prize(lines)
+
+        cur_prize_1 = get_prize_from_line(line_1)
+        cur_prize_2 = get_prize_from_line(line_2)
+        cur_prize_3 = get_prize_from_line(line_3)
+        cur_prize_4 = get_prize_from_line(line_4)
+        cur_prize_5 = get_prize_from_line(line_5)
 
         x = 0
         for i in range(len(matrix_variant)):
-            if matrix_variant[i][0] == 'Scatter' or matrix_variant[i][1] == 'Scatter' or matrix_variant[i][2] == 'Scatter':
-                x += 1
+            for j in range(len(matrix_variant[i])):
+                if matrix_variant[i][j] == 'Scatter':
+                    x += 1
         if x >= 2:
-            cur_prize *= symbols_to_prize['Scatter'][x]
+            if x == 2:
+                cur_prize_1 *= scatter_to_x['scatter_2']
+                cur_prize_2 *= scatter_to_x['scatter_2']
+                cur_prize_3 *= scatter_to_x['scatter_2']
+                cur_prize_4 *= scatter_to_x['scatter_2']
+                cur_prize_5 *= scatter_to_x['scatter_2']
+            elif x == 3:
+                cur_prize_1 *= scatter_to_x['scatter_3']
+                cur_prize_2 *= scatter_to_x['scatter_3']
+                cur_prize_3 *= scatter_to_x['scatter_3']
+                cur_prize_4 *= scatter_to_x['scatter_3']
+                cur_prize_5 *= scatter_to_x['scatter_3']
+            elif x == 4:
+                cur_prize_1 *= scatter_to_x['scatter_4']
+                cur_prize_2 *= scatter_to_x['scatter_4']
+                cur_prize_3 *= scatter_to_x['scatter_4']
+                cur_prize_4 *= scatter_to_x['scatter_4']
+                cur_prize_5 *= scatter_to_x['scatter_4']
+            elif x == 5:
+                cur_prize_1 *= scatter_to_x['scatter_greater_4']
+                cur_prize_2 *= scatter_to_x['scatter_greater_4']
+                cur_prize_3 *= scatter_to_x['scatter_greater_4']
+                cur_prize_4 *= scatter_to_x['scatter_greater_4']
+                cur_prize_5 *= scatter_to_x['scatter_greater_4']
 
-        if x >= 3 and cur_prize != 0:
-            debug = 0
+        if cur_prize_1 > prize_1: prize_1 = cur_prize_1
+        if cur_prize_2 > prize_2: prize_2 = cur_prize_2
+        if cur_prize_3 > prize_3: prize_3 = cur_prize_3
+        if cur_prize_4 > prize_4: prize_4 = cur_prize_4
+        if cur_prize_5 > prize_5: prize_5 = cur_prize_5
 
-        if cur_prize > prize:
-            prize = cur_prize
-            matrix_prize = matrix_variant
+    prize_list_1.append(prize_1 - 1)
+    prize_list_2.append(prize_2 - 1)
+    prize_list_3.append(prize_3 - 1)
+    prize_list_4.append(prize_4 - 1)
+    prize_list_5.append(prize_5 - 1)
 
-    if prize > 0:
-        debug = 0
-
-    money += prize
     money_list.append(money)
+
+PRIZE_1_ACTUAL = sum(prize_list_1) / len(prize_list_1)
+PRIZE_2_ACTUAL = sum(prize_list_2) / len(prize_list_2)
+PRIZE_3_ACTUAL = sum(prize_list_3) / len(prize_list_3)
+PRIZE_4_ACTUAL = sum(prize_list_4) / len(prize_list_4)
+PRIZE_5_ACTUAL = sum(prize_list_5) / len(prize_list_5)
 
 x_axis = numpy.arange(0, len(money_list), 1)
 y_axis = money_list
