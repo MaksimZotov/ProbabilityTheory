@@ -138,6 +138,17 @@ def get_prize_from_line(line):
         prize += symbols_to_prize[symbol][count]
     return prize
 
+def create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, si_iter):
+    if len(wild_indexes) > len(si_iter):
+        for symbol in symbols_si:
+            si_iter_cur = deepcopy(si_iter)
+            si_iter_cur.append(symbol)
+            create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, si_iter_cur)
+    else:
+        matrix_variant = deepcopy(matrix)
+        for s in range(len(si_iter)):
+            matrix_variant[wild_indexes[s][0]][wild_indexes[s][1]] = si_iter[s]
+        matrix_variants.append(matrix_variant)
 
 money_list.append(money)
 prize_list_1 = []
@@ -155,55 +166,9 @@ for i in range(100000):
                 wild_indexes.append([i, j])
 
     matrix_variants = []
-    symbols_Si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
-    n = len(symbols_to_prize)
-    wild_indexes_len = len(wild_indexes)
-    for s1 in symbols_Si:
-        if wild_indexes_len == 1:
-            matrix_variant = deepcopy(matrix)
-            matrix_variant[wild_indexes[0][0]][wild_indexes[0][1]] = s1
-            matrix_variants.append(matrix_variant)
-        for s2 in symbols_Si:
-            if wild_indexes_len < 2:
-                break
-            if wild_indexes_len == 2:
-                matrix_variant = deepcopy(matrix)
-                matrix_variant[wild_indexes[0][0]][wild_indexes[0][1]] = s1
-                matrix_variant[wild_indexes[1][0]][wild_indexes[1][1]] = s2
-                matrix_variants.append(matrix_variant)
-            for s3 in symbols_Si:
-                if wild_indexes_len < 3:
-                    break
-                if wild_indexes_len == 3:
-                    matrix_variant = deepcopy(matrix)
-                    matrix_variant[wild_indexes[0][0]][wild_indexes[0][1]] = s1
-                    matrix_variant[wild_indexes[1][0]][wild_indexes[1][1]] = s2
-                    matrix_variant[wild_indexes[2][0]][wild_indexes[2][1]] = s3
-                    matrix_variants.append(matrix_variant)
-                for s4 in symbols_Si:
-                    if wild_indexes_len < 4:
-                        break
-                    if wild_indexes_len == 4:
-                        matrix_variant = deepcopy(matrix)
-                        matrix_variant[wild_indexes[0][0]][wild_indexes[0][1]] = s1
-                        matrix_variant[wild_indexes[1][0]][wild_indexes[1][1]] = s2
-                        matrix_variant[wild_indexes[2][0]][wild_indexes[2][1]] = s3
-                        matrix_variant[wild_indexes[3][0]][wild_indexes[3][1]] = s4
-                        matrix_variants.append(matrix_variant)
-                    for s5 in symbols_Si:
-                        if wild_indexes_len < 5:
-                            break
-                        if wild_indexes_len == 5:
-                            matrix_variant = deepcopy(matrix)
-                            matrix_variant[wild_indexes[0][0]][wild_indexes[0][1]] = s1
-                            matrix_variant[wild_indexes[1][0]][wild_indexes[1][1]] = s2
-                            matrix_variant[wild_indexes[2][0]][wild_indexes[2][1]] = s3
-                            matrix_variant[wild_indexes[3][0]][wild_indexes[3][1]] = s4
-                            matrix_variant[wild_indexes[4][0]][wild_indexes[4][1]] = s5
-                            matrix_variants.append(matrix_variant)
+    symbols_si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
 
-    if len(wild_indexes) == 0:
-        matrix_variants.append(matrix)
+    create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, [])
 
     prize_1 = 0
     prize_2 = 0
