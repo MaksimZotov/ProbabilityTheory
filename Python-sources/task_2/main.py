@@ -138,12 +138,12 @@ def get_prize_from_line(line):
         prize += symbols_to_prize[symbol][count]
     return prize
 
-def create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, si_iter):
+def create_matrix_variants(matrix, matrix_variants, wild_indexes, symbols_si, si_iter):
     if len(wild_indexes) > len(si_iter):
         for symbol in symbols_si:
             si_iter_cur = deepcopy(si_iter)
             si_iter_cur.append(symbol)
-            create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, si_iter_cur)
+            create_matrix_variants(matrix, matrix_variants, wild_indexes, symbols_si, si_iter_cur)
     else:
         matrix_variant = deepcopy(matrix)
         for s in range(len(si_iter)):
@@ -168,7 +168,7 @@ for i in range(100000):
     matrix_variants = []
     symbols_si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
 
-    create_matrix_varianes(matrix, matrix_variants, wild_indexes, symbols_si, [])
+    create_matrix_variants(matrix, matrix_variants, wild_indexes, symbols_si, [])
 
     prize_1 = 0
     prize_2 = 0
