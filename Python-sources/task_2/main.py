@@ -14,6 +14,7 @@ def sum_p_Bernoulli(p, m_left, m_right, n):
 
 def prob_outcomes(symbol_to_prob, columns, rows):
     result = {}
+    p_win = 0
     wild_prob = symbol_to_prob['Wild']
     scatter_prob = symbol_to_prob['Scatter']
     n = columns * rows
@@ -21,6 +22,8 @@ def prob_outcomes(symbol_to_prob, columns, rows):
         if symbol == 'Wild' or symbol == "Scatter":
             continue
         p = symbol_to_prob[symbol]
+
+        p_win += ((wild_prob + p) ** 3)
 
         result[(symbol, 3, 'scatter_lower_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 3)
         result[(symbol, 3, 'scatter_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 3)
@@ -104,10 +107,10 @@ theoretical_payback_above_y = []
 theoretical_payback_below_y = []
 theoretical_payback_EV_y = []
 for n in range(1, 501):
-    tp = V_I / math.sqrt(n)
+    V_I_div_sqrt_n = V_I / math.sqrt(n)
     theoretical_payback_x.append(n)
-    theoretical_payback_above_y.append(tp)
-    theoretical_payback_below_y.append(-tp)
+    theoretical_payback_above_y.append(EV + V_I_div_sqrt_n)
+    theoretical_payback_below_y.append(EV - V_I_div_sqrt_n)
     theoretical_payback_EV_y.append(EV)
 
 figure = go.Figure()
@@ -116,10 +119,16 @@ figure.add_trace(go.Scatter(x=theoretical_payback_x, y=theoretical_payback_below
 figure.add_trace(go.Scatter(x=theoretical_payback_x, y=theoretical_payback_EV_y))
 figure.show()
 
+p_get_prize_list_y = [p_get_prize]
+p_get_prize_list_x = [1]
+for n in range(2, 501):
+    p_get_prize_list_y.append((p_get_prize) ** n)
+    p_get_prize_list_x.append(n)
+figure = go.Figure()
+figure.add_trace(go.Scatter(x=p_get_prize_list_x, y=p_get_prize_list_y))
+figure.show()
+
 debug = 0
-
-
-
 
 def create_matrix(matrix):
     for i in range(len(matrix)):
@@ -173,7 +182,7 @@ prize_list_2 = []
 prize_list_3 = []
 prize_list_4 = []
 prize_list_5 = []
-for i in range(10000):
+for i in range(1000):
     create_matrix(matrix)
 
     wild_indexes = []
