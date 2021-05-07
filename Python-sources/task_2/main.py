@@ -1,3 +1,4 @@
+import math
 from math import comb
 
 import plotly.graph_objs as go
@@ -66,31 +67,58 @@ scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter
 
 columns = 5
 rows = 3
+wager = 1
 
 probs_outcomes = prob_outcomes(symbol_to_prob, columns, rows)
 
 EV = 0
-wager = 1
 p_get_prize = 0
 for symbol_quantity_scatter in probs_outcomes:
-    p_get_prize += probs_outcomes[symbol_quantity_scatter]
     symbol = symbol_quantity_scatter[0]
     quantity = symbol_quantity_scatter[1]
     scatter = symbol_quantity_scatter[2]
-    EV += probs_outcomes[symbol_quantity_scatter] * (symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] - wager)
-EV += (1 - p_get_prize) * (-wager)
+    net_pay = wager - symbols_to_prize[symbol][quantity] * scatter_to_x[scatter]
+    pi = probs_outcomes[symbol_quantity_scatter]
+    EV += net_pay * pi
+    p_get_prize += pi
+EV += wager * (1 - p_get_prize)
 
-PRIZE_EXPECTED = EV
+HA = EV * 100
+RTP = 100 - HA
+
+VAR = 0
+for symbol_quantity_scatter in probs_outcomes:
+    symbol = symbol_quantity_scatter[0]
+    quantity = symbol_quantity_scatter[1]
+    scatter = symbol_quantity_scatter[2]
+    net_pay = wager - symbols_to_prize[symbol][quantity] * scatter_to_x[scatter]
+    pi = probs_outcomes[symbol_quantity_scatter]
+    VAR += ((net_pay - EV) ** 2) * pi
+VAR += ((wager - EV) ** 2) * (1 - p_get_prize)
+
+SD = math.sqrt(VAR)
+V_I = 1.96 * SD
+
+theoretical_payback_x = []
+theoretical_payback_above_y = []
+theoretical_payback_below_y = []
+theoretical_payback_EV_y = []
+for n in range(1, 501):
+    tp = V_I / math.sqrt(n)
+    theoretical_payback_x.append(n)
+    theoretical_payback_above_y.append(tp)
+    theoretical_payback_below_y.append(-tp)
+    theoretical_payback_EV_y.append(EV)
+
+figure = go.Figure()
+figure.add_trace(go.Scatter(x=theoretical_payback_x, y=theoretical_payback_above_y))
+figure.add_trace(go.Scatter(x=theoretical_payback_x, y=theoretical_payback_below_y))
+figure.add_trace(go.Scatter(x=theoretical_payback_x, y=theoretical_payback_EV_y))
+figure.show()
+
+debug = 0
 
 
-money = 10000
-money_list = []
-
-matrix = [['any', 'any', 'any'],
-          ['any', 'any', 'any'],
-          ['any', 'any', 'any'],
-          ['any', 'any', 'any'],
-          ['any', 'any', 'any']]
 
 
 def create_matrix(matrix):
@@ -103,24 +131,6 @@ def create_matrix(matrix):
                 if sigma >= rnd:
                     matrix[i][j] = symbol
                     break
-
-
-def get_prize(lines):
-    prize = 0
-    for line in lines:
-        count = 1
-        prev = line[0]
-        for i in range(1, len(line)):
-            next = line[i]
-            if next == prev:
-                count += 1
-            else:
-                break
-            prev = next
-        symbol = line[0]
-        if count >= 3 and symbol != 'Scatter':
-            prize += symbols_to_prize[symbol][count]
-    return prize
 
 def get_prize_from_line(line):
     prize = 0
@@ -150,13 +160,20 @@ def create_matrix_variants(matrix, matrix_variants, wild_indexes, symbols_si, si
             matrix_variant[wild_indexes[s][0]][wild_indexes[s][1]] = si_iter[s]
         matrix_variants.append(matrix_variant)
 
-money_list.append(money)
+symbols_si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
+
+matrix = [['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any'],
+          ['any', 'any', 'any']]
+
 prize_list_1 = []
 prize_list_2 = []
 prize_list_3 = []
 prize_list_4 = []
 prize_list_5 = []
-for i in range(100000):
+for i in range(10000):
     create_matrix(matrix)
 
     wild_indexes = []
@@ -166,7 +183,6 @@ for i in range(100000):
                 wild_indexes.append([i, j])
 
     matrix_variants = []
-    symbols_si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
 
     create_matrix_variants(matrix, matrix_variants, wild_indexes, symbols_si, [])
 
@@ -225,13 +241,11 @@ for i in range(100000):
         if cur_prize_4 > prize_4: prize_4 = cur_prize_4
         if cur_prize_5 > prize_5: prize_5 = cur_prize_5
 
-    prize_list_1.append(prize_1 - 1)
-    prize_list_2.append(prize_2 - 1)
-    prize_list_3.append(prize_3 - 1)
-    prize_list_4.append(prize_4 - 1)
-    prize_list_5.append(prize_5 - 1)
-
-    money_list.append(money)
+    prize_list_1.append(prize_1 - wager)
+    prize_list_2.append(prize_2 - wager)
+    prize_list_3.append(prize_3 - wager)
+    prize_list_4.append(prize_4 - wager)
+    prize_list_5.append(prize_5 - wager)
 
 PRIZE_1_ACTUAL = sum(prize_list_1) / len(prize_list_1)
 PRIZE_2_ACTUAL = sum(prize_list_2) / len(prize_list_2)
@@ -239,8 +253,10 @@ PRIZE_3_ACTUAL = sum(prize_list_3) / len(prize_list_3)
 PRIZE_4_ACTUAL = sum(prize_list_4) / len(prize_list_4)
 PRIZE_5_ACTUAL = sum(prize_list_5) / len(prize_list_5)
 
-x_axis = numpy.arange(0, len(money_list), 1)
-y_axis = money_list
-figure = go.Figure()
-figure.add_trace(go.Scatter(x=x_axis, y=y_axis))
-figure.show()
+debug = 0
+
+#x_axis = numpy.arange(0, len(money_list), 1)
+#y_axis = money_list
+#figure = go.Figure()
+#figure.add_trace(go.Scatter(x=x_axis, y=y_axis))
+#figure.show()
