@@ -123,7 +123,7 @@ for n in range(2, 501):
     p_get_prize_list_y_F.append(p_get_prize_list_y_F[n - 1] + (1 - p_get_prize) ** (n - 1) * p_get_prize)
     p_get_prize_list_x_F.append(n)
 go.Figure(go.Scatter(x=p_get_prize_list_x, y=p_get_prize_list_y)).show()
-go.Figure(go.Scatter(x=p_get_prize_list_x, y=p_get_prize_list_y_F)).show()
+go.Figure(go.Scatter(x=p_get_prize_list_x_F, y=p_get_prize_list_y_F)).show()
 
 def create_matrix(matrix):
     for i in range(len(matrix)):
