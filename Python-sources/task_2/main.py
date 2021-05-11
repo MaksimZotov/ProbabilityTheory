@@ -3,6 +3,8 @@ from math import comb
 import plotly.graph_objs as go
 import random
 
+# -------------------------------------------
+
 def sum_p_Bernoulli(p, m_left, m_right, n):
     result = 0
     for m in range(m_left, m_right + 1):
@@ -39,6 +41,8 @@ def prob_outcomes(symbol_to_prob, columns, rows):
 
     return result
 
+# -------------------------------------------
+
 symbol_to_prob = {'S1': 0.18,
                   'S2': 0.16,
                   'S3': 0.15,
@@ -63,6 +67,7 @@ scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter
 
 lines = ['line_1', 'line_2', 'line_3', 'line_4', 'line_5']
 
+# -------------------------------------------
 
 columns = 5
 rows = 3
@@ -163,6 +168,10 @@ for n in range(2, 501):
 go.Figure(go.Scatter(x=p_get_prize_list_x, y=p_get_prize_list_y)).show()
 go.Figure(go.Scatter(x=p_get_prize_list_x_F, y=p_get_prize_list_y_F)).show()
 
+# -------------------------------------------
+# -------------------------------------------
+# -------------------------------------------
+
 def create_matrix(matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
@@ -211,6 +220,7 @@ def get_prize_from_line(line):
         return symbols_to_prize[symbol][count]
     return prize
 
+# -------------------------------------------
 
 symbols_si = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8']
 
@@ -220,13 +230,14 @@ matrix = [['any', 'any', 'any'],
           ['any', 'any', 'any'],
           ['any', 'any', 'any']]
 
-
 p_win_dict = {'line_1': {}, 'line_2': {}, 'line_3': {}, 'line_4': {}, 'line_5': {}}
 line_n = [1, 1, 1, 1, 1]
 EV_list = [[], [], [], [], []]
+p_get_prize_n = [0, 0, 0, 0, 0]
+
+# -------------------------------------------
 
 N = 100000
-p_get_prize_n = [0, 0, 0, 0, 0]
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
@@ -262,6 +273,8 @@ for i in range(N):
 
     for i in range(len(EV_list)):
         EV_list[i].append(wager - prize_n[i])
+
+# -------------------------------------------
 
 for i in range(len(p_get_prize_n)):
     p_get_prize_n[i] = p_get_prize_n[i] / N
