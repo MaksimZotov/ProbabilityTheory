@@ -232,12 +232,13 @@ matrix = [['any', 'any', 'any'],
 
 p_win_dict = {'line_1': {}, 'line_2': {}, 'line_3': {}, 'line_4': {}, 'line_5': {}}
 line_n = [1, 1, 1, 1, 1]
-EV_list = [[], [], [], [], []]
+EV_list_n = [[], [], [], [], []]
+VAR_n = [0, 0, 0, 0, 0]
 p_get_prize_n = [0, 0, 0, 0, 0]
 
 # -------------------------------------------
 
-N = 100000
+N = 1000000
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
@@ -263,6 +264,7 @@ for i in range(N):
         for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_greater_4']
 
     for i in range(len(p_get_prize_n)):
+        VAR_n[i] += (prize_n[i] - EV) ** 2
         if prize_n[i] > 0:
             p_get_prize_n[i] += 1
             if p_win_dict[lines[i]].__contains__(line_n[i]): p_win_dict[lines[i]][line_n[i]] += 1
@@ -271,13 +273,14 @@ for i in range(N):
         else:
             line_n[i] += 1
 
-    for i in range(len(EV_list)):
-        EV_list[i].append(wager - prize_n[i])
+    for i in range(len(EV_list_n)):
+        EV_list_n[i].append(wager - prize_n[i])
 
 # -------------------------------------------
 
 for i in range(len(p_get_prize_n)):
     p_get_prize_n[i] = p_get_prize_n[i] / N
+    VAR_n[i] = VAR_n[i] / N
 
 p_win_dict_new_keys = {'line_1': {}, 'line_2': {}, 'line_3': {}, 'line_4': {}, 'line_5': {}}
 for line_p_win in p_win_dict:
@@ -313,10 +316,10 @@ for line in acc:
     figure.add_trace(go.Scatter(x=axis_x_F[line], y=axis_y_F[line]))
 figure.show()
 
-EV_N_ACTUAL = [sum(EV_list[0]) / len(EV_list[0]),
-               sum(EV_list[1]) / len(EV_list[1]),
-               sum(EV_list[2]) / len(EV_list[2]),
-               sum(EV_list[3]) / len(EV_list[3]),
-               sum(EV_list[4]) / len(EV_list[4]),]
+EV_N_ACTUAL = [sum(EV_list_n[0]) / len(EV_list_n[0]),
+               sum(EV_list_n[1]) / len(EV_list_n[1]),
+               sum(EV_list_n[2]) / len(EV_list_n[2]),
+               sum(EV_list_n[3]) / len(EV_list_n[3]),
+               sum(EV_list_n[4]) / len(EV_list_n[4])]
 
 debug = 0
