@@ -238,7 +238,7 @@ p_get_prize_n = [0, 0, 0, 0, 0]
 
 # -------------------------------------------
 
-N = 1000000
+N = 10000000
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
@@ -321,5 +321,7 @@ EV_N_ACTUAL = [sum(EV_list_n[0]) / len(EV_list_n[0]),
                sum(EV_list_n[2]) / len(EV_list_n[2]),
                sum(EV_list_n[3]) / len(EV_list_n[3]),
                sum(EV_list_n[4]) / len(EV_list_n[4])]
+
+# -------------------------------------------
 
 debug = 0
