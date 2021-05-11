@@ -61,6 +61,8 @@ symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
 
 scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter_4': 75, 'scatter_greater_4': 100}
 
+lines = ['line_1', 'line_2', 'line_3', 'line_4', 'line_5']
+
 
 columns = 5
 rows = 3
@@ -69,16 +71,52 @@ wager = 1
 probs_outcomes = prob_outcomes(symbol_to_prob, columns, rows)
 
 EV = 0
+
+M = 0
+MODA = 0
+MID = 0
+MODA_P = -1.0
+MAX_PRIZE = -1
+MIN_PRIZE = 0
+
 p_get_prize = 0
+axis_x = []
+axis_y = []
 for symbol_quantity_scatter in probs_outcomes:
     symbol = symbol_quantity_scatter[0]
     quantity = symbol_quantity_scatter[1]
     scatter = symbol_quantity_scatter[2]
-    net_pay = wager - symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] * wager
+    prize = symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] * wager
+
+    net_pay = wager - prize
     pi = probs_outcomes[symbol_quantity_scatter]
     EV += net_pay * pi
     p_get_prize += pi
+
+    M += pi * prize
+
+    if MODA_P < pi:
+        MODA_P = pi
+        MODA = prize
+    if MAX_PRIZE < prize:
+        MAX_PRIZE = prize
+
+    axis_x.append(prize)
+    axis_y.append(pi)
+
+axis_x = [0] + sorted(axis_x)
+axis_y = [1 - p_get_prize] + sorted(axis_y, reverse=True)
+go.Figure(go.Scatter(x=axis_x, y=axis_y)).show()
 EV += wager * (1 - p_get_prize)
+M += 0 * (1 - p_get_prize)
+MID = (MAX_PRIZE + MIN_PRIZE) / 2
+
+axis_x_F = [0]
+axis_y_F = [0]
+for n in range(len(axis_x)):
+    axis_y_F.append(axis_y_F[n] + axis_y[n])
+    axis_x_F.append(axis_x[n])
+go.Figure(go.Scatter(x=axis_x_F, y=axis_y_F)).show()
 
 HA = EV * 100
 RTP = 100 - HA
@@ -184,29 +222,19 @@ matrix = [['any', 'any', 'any'],
 
 
 p_win_dict = {'line_1': {}, 'line_2': {}, 'line_3': {}, 'line_4': {}, 'line_5': {}}
-line_n_1 = 1
-line_n_2 = 1
-line_n_3 = 1
-line_n_4 = 1
-line_n_5 = 1
-EV_list_1 = []
-EV_list_2 = []
-EV_list_3 = []
-EV_list_4 = []
-EV_list_5 = []
+line_n = [1, 1, 1, 1, 1]
+EV_list = [[], [], [], [], []]
 
-for i in range(10000000):
+N = 100000
+p_get_prize_n = [0, 0, 0, 0, 0]
+for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
     line_2 = [matrix[0][1], matrix[1][1], matrix[2][1], matrix[3][1], matrix[4][1]]
     line_3 = [matrix[0][2], matrix[1][2], matrix[2][2], matrix[3][2], matrix[4][2]]
     line_4 = [matrix[0][0], matrix[1][1], matrix[2][2], matrix[3][1], matrix[4][0]]
     line_5 = [matrix[0][2], matrix[1][1], matrix[2][0], matrix[3][1], matrix[4][2]]
-    prize_1 = get_prize_from_line(line_1)
-    prize_2 = get_prize_from_line(line_2)
-    prize_3 = get_prize_from_line(line_3)
-    prize_4 = get_prize_from_line(line_4)
-    prize_5 = get_prize_from_line(line_5)
+    prize_n = [get_prize_from_line(line_1), get_prize_from_line(line_2), get_prize_from_line(line_3), get_prize_from_line(line_4), get_prize_from_line(line_5)]
 
     x = 0
     for i in range(len(matrix)):
@@ -215,66 +243,28 @@ for i in range(10000000):
                 x += 1
 
     if x == 2:
-        prize_1 *= scatter_to_x['scatter_2']
-        prize_2 *= scatter_to_x['scatter_2']
-        prize_3 *= scatter_to_x['scatter_2']
-        prize_4 *= scatter_to_x['scatter_2']
-        prize_5 *= scatter_to_x['scatter_2']
+        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_2']
     elif x == 3:
-        prize_1 *= scatter_to_x['scatter_3']
-        prize_2 *= scatter_to_x['scatter_3']
-        prize_3 *= scatter_to_x['scatter_3']
-        prize_4 *= scatter_to_x['scatter_3']
-        prize_5 *= scatter_to_x['scatter_3']
+        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_3']
     elif x == 4:
-        prize_1 *= scatter_to_x['scatter_4']
-        prize_2 *= scatter_to_x['scatter_4']
-        prize_3 *= scatter_to_x['scatter_4']
-        prize_4 *= scatter_to_x['scatter_4']
-        prize_5 *= scatter_to_x['scatter_4']
+        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_4']
     elif x == 5:
-        prize_1 *= scatter_to_x['scatter_greater_4']
-        prize_2 *= scatter_to_x['scatter_greater_4']
-        prize_3 *= scatter_to_x['scatter_greater_4']
-        prize_4 *= scatter_to_x['scatter_greater_4']
-        prize_5 *= scatter_to_x['scatter_greater_4']
+        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_greater_4']
 
-    if prize_1 > 0:
-        if p_win_dict['line_1'].__contains__(line_n_1): p_win_dict['line_1'][line_n_1] += 1
-        else: p_win_dict['line_1'][line_n_1] = 1
-        line_n_1 = 1
-    else:
-        line_n_1 += 1
-    if prize_2 > 0:
-        if p_win_dict['line_2'].__contains__(line_n_2): p_win_dict['line_2'][line_n_2] += 1
-        else: p_win_dict['line_2'][line_n_2] = 1
-        line_n_2 = 1
-    else:
-        line_n_2 += 1
-    if prize_3 > 0:
-        if p_win_dict['line_3'].__contains__(line_n_3): p_win_dict['line_3'][line_n_3] += 1
-        else: p_win_dict['line_3'][line_n_3] = 1
-        line_n_3 = 1
-    else:
-        line_n_3 += 1
-    if prize_4 > 0:
-        if p_win_dict['line_4'].__contains__(line_n_4): p_win_dict['line_4'][line_n_4] += 1
-        else: p_win_dict['line_4'][line_n_4] = 1
-        line_n_4 = 1
-    else:
-        line_n_4 += 1
-    if prize_5 > 0:
-        if p_win_dict['line_5'].__contains__(line_n_5): p_win_dict['line_5'][line_n_5] += 1
-        else: p_win_dict['line_5'][line_n_5] = 1
-        line_n_5 = 1
-    else:
-        line_n_5 += 1
+    for i in range(len(p_get_prize_n)):
+        if prize_n[i] > 0:
+            p_get_prize_n[i] += 1
+            if p_win_dict[lines[i]].__contains__(line_n[i]): p_win_dict[lines[i]][line_n[i]] += 1
+            else: p_win_dict[lines[i]][line_n[i]] = 1
+            line_n[i] = 1
+        else:
+            line_n[i] += 1
 
-    EV_list_1.append(wager - prize_1)
-    EV_list_2.append(wager - prize_2)
-    EV_list_3.append(wager - prize_3)
-    EV_list_4.append(wager - prize_4)
-    EV_list_5.append(wager - prize_5)
+    for i in range(len(EV_list)):
+        EV_list[i].append(wager - prize_n[i])
+
+for i in range(len(p_get_prize_n)):
+    p_get_prize_n[i] = p_get_prize_n[i] / N
 
 p_win_dict_new_keys = {'line_1': {}, 'line_2': {}, 'line_3': {}, 'line_4': {}, 'line_5': {}}
 for line_p_win in p_win_dict:
@@ -292,20 +282,28 @@ for line in acc:
 
 axis_x = {'line_1': [], 'line_2': [], 'line_3': [], 'line_4': [], 'line_5': []}
 axis_y = {'line_1': [], 'line_2': [], 'line_3': [], 'line_4': [], 'line_5': []}
+axis_x_F = {'line_1': [0], 'line_2': [0], 'line_3': [0], 'line_4': [0], 'line_5': [0]}
+axis_y_F = {'line_1': [0], 'line_2': [0], 'line_3': [0], 'line_4': [0], 'line_5': [0]}
 for line in acc:
     for n in p_win_dict_new_keys_and_values[line]:
         axis_x[line].append(n)
         axis_y[line].append(p_win_dict_new_keys_and_values[line][n] / acc[line])
+        axis_x_F[line].append(n)
+        axis_y_F[line].append(axis_y_F[line][len(axis_y_F[line]) - 1] + p_win_dict_new_keys_and_values[line][n] / acc[line])
 
 figure = go.Figure()
 for line in acc:
     figure.add_trace(go.Scatter(x=axis_x[line], y=axis_y[line]))
 figure.show()
+figure = go.Figure()
+for line in acc:
+    figure.add_trace(go.Scatter(x=axis_x_F[line], y=axis_y_F[line]))
+figure.show()
 
-EV_1_ACTUAL = sum(EV_list_1) / len(EV_list_1)
-EV_2_ACTUAL = sum(EV_list_2) / len(EV_list_2)
-EV_3_ACTUAL = sum(EV_list_3) / len(EV_list_3)
-EV_4_ACTUAL = sum(EV_list_4) / len(EV_list_4)
-EV_5_ACTUAL = sum(EV_list_5) / len(EV_list_5)
+EV_N_ACTUAL = [sum(EV_list[0]) / len(EV_list[0]),
+               sum(EV_list[1]) / len(EV_list[1]),
+               sum(EV_list[2]) / len(EV_list[2]),
+               sum(EV_list[3]) / len(EV_list[3]),
+               sum(EV_list[4]) / len(EV_list[4]),]
 
 debug = 0
