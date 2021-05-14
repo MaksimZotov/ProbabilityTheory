@@ -43,27 +43,27 @@ def prob_outcomes(symbol_to_prob, columns, rows):
 
 # -------------------------------------------
 
-symbol_to_prob = {'S1': 0.18,
-                  'S2': 0.16,
+symbol_to_prob = {'S1': 0.325,
+                  'S2': 0.2,
                   'S3': 0.15,
-                  'S4': 0.13,
-                  'S5': 0.11,
-                  'S6': 0.09,
-                  'S7': 0.07,
-                  'S8': 0.05,
-                  'Wild': 0.04,
-                  'Scatter': 0.02}
+                  'S4': 0.05,
+                  'S5': 0.04,
+                  'S6': 0.03,
+                  'S7': 0.02,
+                  'S8': 0.01,
+                  'Wild': 0.075,
+                  'Scatter': 0.1}
 
-symbols_to_prize = {'S1': {3: 3, 4: 15, 5: 45},
-                    'S2': {3: 5, 4: 30, 5: 75},
-                    'S3': {3: 7, 4: 50, 5: 150},
-                    'S4': {3: 9, 4: 60, 5: 250},
-                    'S5': {3: 12, 4: 75, 5: 350},
-                    'S6': {3: 15, 4: 90, 5: 500},
-                    'S7': {3: 20, 4: 120, 5: 750},
-                    'S8': {3: 30, 4: 150, 5: 1000}}
+symbols_to_prize = {'S1': {3: 2, 4: 5, 5: 10},
+                    'S2': {3: 4, 4: 9, 5: 25},
+                    'S3': {3: 7, 4: 20, 5: 30},
+                    'S4': {3: 9, 4: 25, 5: 55},
+                    'S5': {3: 12, 4: 50, 5: 75},
+                    'S6': {3: 15, 4: 60, 5: 100},
+                    'S7': {3: 20, 4: 80, 5: 150},
+                    'S8': {3: 30, 4: 100, 5: 200}}
 
-scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter_4': 75, 'scatter_greater_4': 100}
+scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 2, 'scatter_3': 4, 'scatter_4': 8, 'scatter_greater_4': 10}
 
 lines = ['line_1', 'line_2', 'line_3', 'line_4', 'line_5']
 
@@ -93,7 +93,7 @@ for symbol_quantity_scatter in probs_outcomes:
     scatter = symbol_quantity_scatter[2]
     prize = symbols_to_prize[symbol][quantity] * scatter_to_x[scatter] * wager
 
-    net_pay = wager - prize
+    net_pay = prize - wager
     pi = probs_outcomes[symbol_quantity_scatter]
     EV += net_pay * pi
     p_get_prize += pi
@@ -112,7 +112,8 @@ for symbol_quantity_scatter in probs_outcomes:
 axis_x = [0] + sorted(axis_x)
 axis_y = [1 - p_get_prize] + sorted(axis_y, reverse=True)
 go.Figure(go.Scatter(x=axis_x, y=axis_y)).show()
-EV += wager * (1 - p_get_prize)
+EV += -wager * (1 - p_get_prize)
+EV = -EV
 M += 0 * (1 - p_get_prize)
 MID = (MAX_PRIZE + MIN_PRIZE) / 2
 
@@ -196,14 +197,14 @@ def get_prize_from_line(line):
             else:
                 break
         if count == 5:
-            return symbols_to_prize['S8'][count]
+            return (symbols_to_prize['S8'][count], 'S8', count)
         else:
             next_after_wild = line[wild_index + 1]
             if next_after_wild == 'Scatter':
                 if count >= 3:
-                    return symbols_to_prize['S8'][count]
+                    return (symbols_to_prize['S8'][count], 'S8', count)
                 else:
-                    return 0
+                    return (0, 'nothing', -1)
         symbol = line[wild_index + 1]
     else:
         count = 1
@@ -217,8 +218,8 @@ def get_prize_from_line(line):
         else:
             break
     if count >= 3 and symbol != 'Scatter':
-        return symbols_to_prize[symbol][count]
-    return prize
+        return (symbols_to_prize[symbol][count], symbol, count)
+    return (0, 'nothing', -1)
 
 # -------------------------------------------
 
@@ -235,10 +236,15 @@ line_n = [1, 1, 1, 1, 1]
 EV_list_n = [[], [], [], [], []]
 VAR_n = [0, 0, 0, 0, 0]
 p_get_prize_n = [0, 0, 0, 0, 0]
+probs_outcomes_exp = [{}, {}, {}, {}, {}]
 
 # -------------------------------------------
 
-N = 10000000
+for i in range(len(probs_outcomes_exp)):
+    for key in probs_outcomes:
+        probs_outcomes_exp[i][key] = 0
+
+N = 1000000
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
@@ -248,24 +254,31 @@ for i in range(N):
     line_5 = [matrix[0][2], matrix[1][1], matrix[2][0], matrix[3][1], matrix[4][2]]
     prize_n = [get_prize_from_line(line_1), get_prize_from_line(line_2), get_prize_from_line(line_3), get_prize_from_line(line_4), get_prize_from_line(line_5)]
 
+    scatter = 'scatter_lower_2'
     x = 0
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             if matrix[i][j] == 'Scatter':
                 x += 1
+    if x == 2: scatter = 'scatter_2'
+    elif x == 3: scatter = 'scatter_3'
+    elif x == 4: scatter = 'scatter_4'
+    elif x >= 5: scatter = 'scatter_greater_4'
+    for n in range(len(prize_n)):
+        prize_n[n] = (prize_n[n][0] * scatter_to_x[scatter], prize_n[n][1], prize_n[n][2])
 
-    if x == 2:
-        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_2']
-    elif x == 3:
-        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_3']
-    elif x == 4:
-        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_4']
-    elif x == 5:
-        for n in range(len(prize_n)): prize_n[n] *= scatter_to_x['scatter_greater_4']
+    for i in range(len(prize_n)):
+        prize_symbol_count = prize_n[i]
+        prize = prize_symbol_count[0]
+        if prize == 0:
+            continue
+        symbol = prize_symbol_count[1]
+        count = prize_symbol_count[2]
+        probs_outcomes_exp[i][(symbol, count, scatter)] += 1
 
     for i in range(len(p_get_prize_n)):
-        VAR_n[i] += (prize_n[i] - EV) ** 2
-        if prize_n[i] > 0:
+        VAR_n[i] += (prize_n[i][0] - EV) ** 2
+        if prize_n[i][0] > 0:
             p_get_prize_n[i] += 1
             if p_win_dict[lines[i]].__contains__(line_n[i]): p_win_dict[lines[i]][line_n[i]] += 1
             else: p_win_dict[lines[i]][line_n[i]] = 1
@@ -274,9 +287,13 @@ for i in range(N):
             line_n[i] += 1
 
     for i in range(len(EV_list_n)):
-        EV_list_n[i].append(wager - prize_n[i])
+        EV_list_n[i].append(wager - prize_n[i][0])
 
 # -------------------------------------------
+
+for i in range(len(probs_outcomes_exp)):
+    for key in probs_outcomes_exp[i]:
+        probs_outcomes_exp[i][key] = probs_outcomes_exp[i][key] / N
 
 for i in range(len(p_get_prize_n)):
     p_get_prize_n[i] = p_get_prize_n[i] / N
