@@ -43,16 +43,16 @@ def prob_outcomes(symbol_to_prob, columns, rows):
 
 # -------------------------------------------
 
-symbol_to_prob = {'S1': 0.4,
-                  'S2': 0.15,
+symbol_to_prob = {'S1': 0.1,
+                  'S2': 0.1,
                   'S3': 0.1,
-                  'S4': 0.07,
-                  'S5': 0.06,
-                  'S6': 0.05,
-                  'S7': 0.05,
-                  'S8': 0.05,
-                  'Wild': 0.05,
-                  'Scatter': 0.02}
+                  'S4': 0.1,
+                  'S5': 0.1,
+                  'S6': 0.1,
+                  'S7': 0.1,
+                  'S8': 0.1,
+                  'Wild': 0.1,
+                  'Scatter': 0.1}
 
 symbols_to_prize = {'S1': {3: 4, 4: 6, 5: 10},
                     'S2': {3: 6, 4: 8, 5: 12},
@@ -244,7 +244,7 @@ for i in range(len(probs_outcomes_exp)):
     for key in probs_outcomes:
         probs_outcomes_exp[i][key] = 0
 
-N = 10000000
+N = 100000
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
