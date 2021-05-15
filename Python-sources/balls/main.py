@@ -9,6 +9,37 @@ m = 6
 limit = 9100
 
 startPComb = 1 / comb(N + m - 1, m - 1)
+
+# вычислены заранее (см. ниже)
+bestCombinations = {(10, 50, 20, 70, 80, 60): startPComb,
+                    (10, 50, 20, 80, 70, 60): startPComb,
+                    (10, 60, 20, 60, 80, 60): startPComb,
+                    (10, 60, 20, 70, 70, 60): startPComb,
+                    (10, 60, 20, 70, 80, 50): startPComb,
+                    (10, 60, 20, 80, 60, 60): startPComb,
+                    (10, 60, 20, 80, 70, 50): startPComb,
+                    (10, 70, 20, 60, 70, 60): startPComb,
+                    (10, 70, 20, 70, 60, 60): startPComb,
+                    (10, 70, 20, 70, 70, 50): startPComb}
+
+combinationsToShow_n = 10
+combinationsToShow_y = {(10, 50, 20, 70, 80, 60): [startPComb],
+                        (10, 50, 20, 80, 70, 60): [startPComb],
+                        (10, 60, 20, 60, 80, 60): [startPComb],
+                        (10, 60, 20, 70, 70, 60): [startPComb],
+                        (10, 60, 20, 70, 80, 50): [startPComb],
+                        (10, 60, 20, 80, 60, 60): [startPComb],
+                        (10, 60, 20, 80, 70, 50): [startPComb],
+                        (10, 70, 20, 60, 70, 60): [startPComb],
+                        (10, 70, 20, 70, 60, 60): [startPComb],
+                        (10, 70, 20, 70, 70, 50): [startPComb]}
+#combinationsToShow = []
+
+combForPerformance = {}
+for i in range(N + 1):
+    for j in range(4):
+        combForPerformance[(i, j)] = comb(i, j)
+
 minPComb = startPComb / 100
 c_2_from_N = comb(N, 2)
 c_3_from_N = comb(N, 3)
@@ -38,7 +69,7 @@ H = [[1 / (N + 1) for i in range(N + 1)] for j in range(m)]
 colors = ['Red', 'White', 'Black', 'Green', 'Blue', 'Yellow']
 
 distributions = []
-sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50,  100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
+sliderSteps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2000, 4000, 9000]
 steps = len(sliderSteps)
 
 quantityWithMaxProb = [[] for i in range(m)]
@@ -76,10 +107,8 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             if sliderSteps.__contains__(countExp):
                 distributions.append(copy.deepcopy(H))
 
-            A_I_H = [[0 for i in range(N + 1)] for j in range(m)]
-            nA_I_H = [[0 for i in range(N + 1)] for j in range(m)]
-            H_I_A = [[0 for i in range(N + 1)] for j in range(m)]
-            H_I_nA = [[0 for i in range(N + 1)] for j in range(m)]
+            A_I_H = [[0.0 for i in range(N + 1)] for j in range(m)]
+            H_I_A = [[0.0 for i in range(N + 1)] for j in range(m)]
 
             localCountTakenBalls = [0] * m
             for i in range(len(data) - quantityOfTakenBalls - 1, len(data) - 1):
@@ -98,7 +127,13 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
             for combination in combinationsCopy_A_I_H:
                 if combinations[combination] < minPComb:
                     combinations.pop(combination)
+
+                    if len(combinations) == combinationsToShow_n:
+                        for item in combinations:
+                            print(item) # !!!!!!!!!!!!!----------------------------------------------------------------------> bestCombinations
+
                     continue
+
                 combinationsCopy_A_I_H[combination] = 1
                 for i in range(m):
                     combinationsCopy_A_I_H[combination] *= comb(combination[i], localCountTakenBalls[i])
@@ -113,27 +148,37 @@ with open('Python-sources/balls/task_1_balls.txt') as line:
                     maxComb = combination
             maxCombinations.append((maxComb, maxP))
 
-            for i in range(m):
-                if localCountTakenBalls[i] > 0:
-                    for j in range(N + 1): A_I_H[i][j] += (j / N) ** localCountTakenBalls[i]
-                else:
-                    for j in range(N + 1): nA_I_H[i][j] += (N - j) / N
+            bestCombinationsCopy_A_I_H = copy.deepcopy(bestCombinations)
+            sumBestCombinationsCopy_A_I_H = 0
+            for combination in bestCombinationsCopy_A_I_H:
+                bestCombinationsCopy_A_I_H[combination] = 1
+                for i in range(m):
+                    bestCombinationsCopy_A_I_H[combination] *= comb(combination[i], localCountTakenBalls[i])
+                bestCombinationsCopy_A_I_H[combination] /= denominator
+                sumBestCombinationsCopy_A_I_H += bestCombinations[combination] * bestCombinationsCopy_A_I_H[combination]
+            for combination in bestCombinations:
+                bestCombinations[combination] = bestCombinations[combination] * bestCombinationsCopy_A_I_H[combination] / sumBestCombinationsCopy_A_I_H
+
+            for key in bestCombinations:
+                combinationsToShow_y[key].append(bestCombinations[key])
 
             for i in range(m):
-                if localCountTakenBalls[i] > 0:
-                    E = 0
-                    for j in range(N + 1): E += H[i][j] * A_I_H[i][j]
-                    for j in range(N + 1): H_I_A[i][j] += H[i][j] * A_I_H[i][j] / E
-                else:
-                    E = 0
-                    for j in range(N + 1): E += H[i][j] * nA_I_H[i][j]
-                    for j in range(N + 1): H_I_nA[i][j] += H[i][j] * nA_I_H[i][j] / E
+                for j in range(N + 1):
+                    if j < localCountTakenBalls[i]:
+                        A_I_H[i][j] = 0
+                    else:
+                        c1 = combForPerformance[(j, localCountTakenBalls[i])]
+                        c2 = combForPerformance[(N - j, quantityOfTakenBalls - localCountTakenBalls[i])]
+                        A_I_H[i][j] = c1 * c2 / denominator
 
             for i in range(m):
-                if localCountTakenBalls[i] > 0:
-                    for j in range(N + 1): H[i][j] = H_I_A[i][j]
-                else:
-                    for j in range(N + 1): H[i][j] = H_I_nA[i][j]
+                E = 0
+                for j in range(N + 1): E += H[i][j] * A_I_H[i][j]
+                for j in range(N + 1): H_I_A[i][j] += H[i][j] * A_I_H[i][j] / E
+
+            for i in range(m):
+                 for j in range(N + 1):
+                     H[i][j] = H_I_A[i][j]
 
             countExp += 1
             if countExp > limit:
@@ -180,3 +225,9 @@ figCountHypothesisComp.show()
 figQuantityWithMaxProb.show()
 figQuantityBasedOnFrequency.show()
 figCountHypothesis.show()
+
+figCombToShow = go.Figure()
+axisXForCombToShow = np.arange(0, countExp)
+for key in combinationsToShow_y:
+    figCombToShow.add_trace(go.Scatter(x=axisXForCombToShow, y=combinationsToShow_y[key], name=str(key)))
+figCombToShow.show()
