@@ -264,7 +264,7 @@ for i in range(len(probs_outcomes_exp)):
     for key in probs_outcomes:
         probs_outcomes_exp[i][key] = 0
 
-N = 100000
+N = 10000000
 for i in range(N):
     create_matrix(matrix)
     line_1 = [matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0], matrix[4][0]]
