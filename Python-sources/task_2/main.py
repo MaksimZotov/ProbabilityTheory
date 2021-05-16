@@ -17,51 +17,71 @@ def prob_outcomes(symbol_to_prob, columns, rows):
     scatter_prob = symbol_to_prob['Scatter']
     n = columns * rows
     for symbol in symbol_to_prob:
-        if symbol == 'Wild' or symbol == "Scatter":
+        if symbol == 'Wild' or symbol == "Scatter" or symbol == "S8":
             continue
         p = symbol_to_prob[symbol]
 
-        result[(symbol, 3, 'scatter_lower_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 3)
-        result[(symbol, 3, 'scatter_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 3)
-        result[(symbol, 3, 'scatter_3')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 3)
-        result[(symbol, 3, 'scatter_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 3)
-        result[(symbol, 3, 'scatter_greater_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 3, n - 3)
+        result[(symbol, 3, 'scatter_lower_2')] = ((wild_prob + p) ** 3 - wild_prob ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 3)
+        result[(symbol, 3, 'scatter_2')] = ((wild_prob + p) ** 3 - wild_prob ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 3)
+        result[(symbol, 3, 'scatter_3')] = ((wild_prob + p) ** 3 - wild_prob ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 3)
+        result[(symbol, 3, 'scatter_4')] = ((wild_prob + p) ** 3 - wild_prob ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 3)
+        result[(symbol, 3, 'scatter_greater_4')] = ((wild_prob + p) ** 3 - wild_prob ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 3, n - 3)
 
-        result[(symbol, 4, 'scatter_lower_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 4)
-        result[(symbol, 4, 'scatter_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 4)
-        result[(symbol, 4, 'scatter_3')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 4)
-        result[(symbol, 4, 'scatter_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 4)
-        result[(symbol, 4, 'scatter_greater_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 4, n - 4)
+        result[(symbol, 4, 'scatter_lower_2')] = ((wild_prob + p) ** 4 - wild_prob ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 4)
+        result[(symbol, 4, 'scatter_2')] = ((wild_prob + p) ** 4 - wild_prob ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 4)
+        result[(symbol, 4, 'scatter_3')] = ((wild_prob + p) ** 4 - wild_prob ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 4)
+        result[(symbol, 4, 'scatter_4')] = ((wild_prob + p) ** 4 - wild_prob ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 4)
+        result[(symbol, 4, 'scatter_greater_4')] = ((wild_prob + p) ** 4 - wild_prob ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 4, n - 4)
 
-        result[(symbol, 5, 'scatter_lower_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 5)
-        result[(symbol, 5, 'scatter_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 5)
-        result[(symbol, 5, 'scatter_3')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 5)
-        result[(symbol, 5, 'scatter_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 5)
-        result[(symbol, 5, 'scatter_greater_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 5, n - 5, n - 5)
+        result[(symbol, 5, 'scatter_lower_2')] = ((wild_prob + p) ** 5 - wild_prob ** 5) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 5)
+        result[(symbol, 5, 'scatter_2')] = ((wild_prob + p) ** 5 - wild_prob ** 5) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 5)
+        result[(symbol, 5, 'scatter_3')] = ((wild_prob + p) ** 5 - wild_prob ** 5) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 5)
+        result[(symbol, 5, 'scatter_4')] = ((wild_prob + p) ** 5 - wild_prob ** 5) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 5)
+        result[(symbol, 5, 'scatter_greater_4')] = ((wild_prob + p) ** 5 - wild_prob ** 5) * sum_p_Bernoulli(scatter_prob, 5, n - 5, n - 5)
+
+    p = symbol_to_prob['S8']
+
+    result[('S8', 3, 'scatter_lower_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 3)
+    result[('S8', 3, 'scatter_2')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 3)
+    result[('S8', 3, 'scatter_3')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 3)
+    result[('S8', 3, 'scatter_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 3)
+    result[('S8', 3, 'scatter_greater_4')] = ((wild_prob + p) ** 3) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 3, n - 3)
+
+    result[('S8', 4, 'scatter_lower_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 4)
+    result[('S8', 4, 'scatter_2')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 4)
+    result[('S8', 4, 'scatter_3')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 4)
+    result[('S8', 4, 'scatter_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 4)
+    result[('S8', 4, 'scatter_greater_4')] = ((wild_prob + p) ** 4) * (1 - (wild_prob + p)) * sum_p_Bernoulli(scatter_prob, 5, n - 4, n - 4)
+
+    result[('S8', 5, 'scatter_lower_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 0, 1, n - 5)
+    result[('S8', 5, 'scatter_2')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 2, 2, n - 5)
+    result[('S8', 5, 'scatter_3')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 3, 3, n - 5)
+    result[('S8', 5, 'scatter_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 4, 4, n - 5)
+    result[('S8', 5, 'scatter_greater_4')] = ((wild_prob + p) ** 5) * sum_p_Bernoulli(scatter_prob, 5, n - 5, n - 5)
 
     return result
 
 # -------------------------------------------
 
-symbol_to_prob = {'S1': 0.1,
-                  'S2': 0.1,
+symbol_to_prob = {'S1': 0.5,
+                  'S2': 0.12,
                   'S3': 0.1,
-                  'S4': 0.1,
-                  'S5': 0.1,
-                  'S6': 0.1,
-                  'S7': 0.1,
-                  'S8': 0.1,
-                  'Wild': 0.1,
-                  'Scatter': 0.1}
+                  'S4': 0.08,
+                  'S5': 0.07,
+                  'S6': 0.05,
+                  'S7': 0.04,
+                  'S8': 0.02,
+                  'Wild': 0.01,
+                  'Scatter': 0.01}
 
-symbols_to_prize = {'S1': {3: 4, 4: 6, 5: 10},
-                    'S2': {3: 6, 4: 8, 5: 12},
-                    'S3': {3: 7, 4: 9, 5: 13},
-                    'S4': {3: 8, 4: 10, 5: 14},
-                    'S5': {3: 9,  4: 11, 5: 15},
-                    'S6': {3: 10, 4: 12, 5: 16},
-                    'S7': {3: 11, 4: 13, 5: 17},
-                    'S8': {3: 12, 4: 14, 5: 18}}
+symbols_to_prize = {'S1': {3: 1, 4: 5, 5: 15},
+                    'S2': {3: 2, 4: 8, 5: 51},
+                    'S3': {3: 7, 4: 50, 5: 150},
+                    'S4': {3: 9, 4: 60, 5: 250},
+                    'S5': {3: 12,  4: 75, 5: 350},
+                    'S6': {3: 15, 4: 90, 5: 500},
+                    'S7': {3: 20, 4: 120, 5: 750},
+                    'S8': {3: 30, 4: 150, 5: 1000}}
 
 scatter_to_x = {'scatter_lower_2': 1, 'scatter_2': 15, 'scatter_3': 40, 'scatter_4': 75, 'scatter_greater_4': 100}
 
